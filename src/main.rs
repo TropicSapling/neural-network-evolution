@@ -1,7 +1,7 @@
 // $ cargo install wasm-bindgen
 // $ cargo install wasm-bindgen-cli
 // $ cargo build --target wasm32-unknown-unknown
-// $ wasm-bindgen target/wasm32-unknown-unknown/debug/neural-network-evolution.wasm --out-dir wasm
+// $ wasm-bindgen target/wasm32-unknown-unknown/debug/neural-network-evolution.wasm --target web --out-dir wasm
 
 use wasm_bindgen::prelude::*;
 
