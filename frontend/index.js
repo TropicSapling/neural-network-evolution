@@ -1,5 +1,7 @@
 "use strict";
 
+import init, {greet} from '../wasm/neural-network-evolution.js'
+
 let canvas;
 
 // Error handler
@@ -37,3 +39,7 @@ function drawFrame(AIs) {
 		canvas.fillRect(AI.pos.x, AI.pos.y, AI.size, AI.size);
 	}
 }
+
+init().then(() => {
+	greet("WebAssembly")
+})
