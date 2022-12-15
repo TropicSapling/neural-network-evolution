@@ -47,6 +47,7 @@ pub fn start() {
 #[wasm_bindgen]
 pub fn greet(name: &str) {
     alert(&format!("Hello, {}!", name));
+    console_log!("Hello, {name}!");
 }
 
 #[wasm_bindgen]
