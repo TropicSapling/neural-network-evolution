@@ -135,6 +135,9 @@ function getImports() {
     imports.wbg.__wbg_alert_f09d08f1281de521 = function(arg0, arg1) {
         alert(getStringFromWasm0(arg0, arg1));
     };
+    imports.wbg.__wbg_log_729ab6548cbcb934 = function(arg0, arg1) {
+        console.log(getStringFromWasm0(arg0, arg1));
+    };
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };
