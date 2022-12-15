@@ -5,6 +5,21 @@
 
 use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
+extern {
+    pub fn alert(s: &str);
+}
+
+#[wasm_bindgen]
+extern "C" {
+	#[wasm_bindgen(js_namespace = console)]
+	fn log(s: &str);
+}
+
+macro_rules! console_log {
+    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
+}
+
 struct Neuron {
 	excitation: isize,
 	tick_drain: usize,
@@ -26,12 +41,7 @@ fn main() {
 
 #[wasm_bindgen(start)]
 pub fn start() {
-	println!("Hello, world!");
-}
-
-#[wasm_bindgen]
-extern {
-    pub fn alert(s: &str);
+	console_log!("Hello, world!");
 }
 
 #[wasm_bindgen]
