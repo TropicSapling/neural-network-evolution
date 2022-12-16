@@ -1,6 +1,8 @@
 "use strict";
 
-import init from '../wasm/neural-network-evolution.js'
+import init, {run} from '../wasm/neural-network-evolution.js'
+
+const FPS = 60;
 
 let canvas;
 
@@ -24,4 +26,6 @@ window.draw_agent = function draw_agent(r, g, b, x, y, size) {
 
 init().then(() => {
 	console.log("Finished loading WebAssembly.")
+	console.log(`Running game at ${FPS} FPS.`)
+	setInterval(run, 1000/FPS)
 })

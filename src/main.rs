@@ -50,14 +50,11 @@ fn main() {
 	println!("Don't run it this way; compile to wasm!")
 }
 
-#[wasm_bindgen(start)]
-pub fn start() {
+#[wasm_bindgen]
+pub fn run() {
 	let agents = vec![];
 
-	console_log!("Starting game.");
-	loop {
-		draw_frame(&agents);
-	}
+	draw_frame(&agents);
 }
 
 fn draw_frame(agents: &Vec<Agent>) {

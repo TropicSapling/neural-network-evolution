@@ -2,13 +2,13 @@
 /* eslint-disable */
 /**
 */
-export function start(): void;
+export function run(): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly start: () => void;
+  readonly run: () => void;
   readonly main: (a: number, b: number) => number;
   readonly __wbindgen_start: () => void;
 }
