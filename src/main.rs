@@ -6,10 +6,14 @@
 #[macro_use]
 mod js;
 mod structs;
+mod game;
+mod ai;
 
 use wasm_bindgen::prelude::*;
 use js::*;
 use structs::*;
+use game::update_game;
+use ai::update_ai;
 
 static mut AGENTS: Vec<Agent> = vec![];
 
@@ -23,13 +27,19 @@ pub unsafe fn start() {
 	AGENTS.push(Agent {
 		neurons : vec![],
 		colour  : Colour {r: 67, g: 45, b: 123},
-		pos     : Pos    {x: 123, y: 456},
-		size    : 123
+		pos     : Pos    {x: 100.0, y: 100.0},
+		size    : 123,
+		angle   : 0.0,
+
+		moving  : true,
+		turning : true
 	});
 }
 
 #[wasm_bindgen]
 pub unsafe fn run() {
+	update_ai(&AGENTS);
+	update_game(&mut AGENTS);
 	draw_frame(&AGENTS);
 }
 

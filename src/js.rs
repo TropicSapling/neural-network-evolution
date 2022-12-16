@@ -9,7 +9,7 @@ extern "C" {
 	pub fn draw_bg();
 
 	#[wasm_bindgen(js_namespace = window)]
-	pub fn draw_agent(r: usize, g: usize, b: usize, x: usize, y: usize, size: usize);
+	pub fn draw_agent(r: usize, g: usize, b: usize, x: f64, y: f64, size: usize);
 }
 
 macro_rules! console_log {
