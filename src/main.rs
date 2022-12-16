@@ -18,7 +18,7 @@ fn main() {
 }
 
 #[wasm_bindgen(start)]
-pub unsafe fn init() {
+pub unsafe fn start() {
 	// Just for testing
 	AGENTS.push(Agent {
 		neurons : vec![],

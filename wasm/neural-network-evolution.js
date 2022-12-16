@@ -3,8 +3,8 @@ let wasm;
 
 /**
 */
-export function init() {
-    wasm.init();
+export function start() {
+    wasm.start();
 }
 
 /**
