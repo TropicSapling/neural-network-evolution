@@ -3,28 +3,13 @@
 /**
 */
 export function start(): void;
-/**
-* @param {string} name
-*/
-export function greet(name: string): void;
-/**
-*/
-export function stop_neural_networks(): void;
-/**
-*/
-export function stop_game(): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly start: () => void;
-  readonly greet: (a: number, b: number) => void;
-  readonly stop_neural_networks: () => void;
-  readonly stop_game: () => void;
   readonly main: (a: number, b: number) => number;
-  readonly __wbindgen_malloc: (a: number) => number;
-  readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_start: () => void;
 }
 
