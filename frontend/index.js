@@ -1,6 +1,6 @@
 "use strict";
 
-import init, {greet} from '../wasm/neural-network-evolution.js'
+import init from '../wasm/neural-network-evolution.js'
 
 let canvas;
 
