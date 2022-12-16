@@ -3,61 +3,38 @@
 // $ cargo build --target wasm32-unknown-unknown
 // $ wasm-bindgen target/wasm32-unknown-unknown/debug/neural-network-evolution.wasm --target web --out-dir wasm
 
+#[macro_use]
+mod js;
+mod structs;
+
 use wasm_bindgen::prelude::*;
+use js::*;
+use structs::*;
 
-#[wasm_bindgen]
-extern "C" {
-	#[wasm_bindgen(js_namespace = console)]
-	fn log(s: &str);
-
-	#[wasm_bindgen(js_namespace = window)]
-	fn draw_bg();
-
-	#[wasm_bindgen(js_namespace = window)]
-	fn draw_agent(r: usize, g: usize, b: usize, x: usize, y: usize, size: usize);
-}
-
-macro_rules! console_log {
-    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
-}
-
-struct Agent {
-	neurons: Vec<Neuron>,
-	colour: Colour,
-	pos: Pos,
-	size: usize
-}
-
-struct Colour {r: usize, g: usize, b: usize}
-struct Pos    {x: usize, y: usize}
-
-struct Neuron {
-	excitation: isize,
-	tick_drain: usize,
-
-	act_threshold: usize,
-
-	next_conn: Vec<ForwardConn>
-}
-
-struct ForwardConn {
-	dest_index: usize,
-	speed: usize,
-	weight: isize
-}
+static mut AGENTS: Vec<Agent> = vec![];
 
 fn main() {
 	println!("Don't run it this way; compile to wasm!")
 }
 
-#[wasm_bindgen]
-pub fn run() {
-	let agents = vec![];
+#[wasm_bindgen(start)]
+pub unsafe fn init() {
+	// Just for testing
+	AGENTS.push(Agent {
+		neurons : vec![],
+		colour  : Colour {r: 67, g: 45, b: 123},
+		pos     : Pos    {x: 123, y: 456},
+		size    : 123
+	});
+}
 
-	draw_frame(&agents);
+#[wasm_bindgen]
+pub unsafe fn run() {
+	draw_frame(&AGENTS);
 }
 
 fn draw_frame(agents: &Vec<Agent>) {
+	console_log!("Drawing frame.");
 	draw_bg();
 	for agent in agents {
 		let Colour {r, g, b} = agent.colour;

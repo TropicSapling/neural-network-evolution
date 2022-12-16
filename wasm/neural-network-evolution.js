@@ -1,12 +1,36 @@
 
 let wasm;
 
-function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
+/**
+*/
+export function init() {
+    wasm.init();
+}
+
 /**
 */
 export function run() {
     wasm.run();
 }
+
+const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+
+cachedTextDecoder.decode();
+
+let cachedUint8Memory0 = new Uint8Array();
+
+function getUint8Memory0() {
+    if (cachedUint8Memory0.byteLength === 0) {
+        cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
+    }
+    return cachedUint8Memory0;
+}
+
+function getStringFromWasm0(ptr, len) {
+    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
+}
+
+function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
 
 async function load(module, imports) {
     if (typeof Response === 'function' && module instanceof Response) {
@@ -42,6 +66,9 @@ async function load(module, imports) {
 function getImports() {
     const imports = {};
     imports.wbg = {};
+    imports.wbg.__wbg_log_729ab6548cbcb934 = function(arg0, arg1) {
+        console.log(getStringFromWasm0(arg0, arg1));
+    };
     imports.wbg.__wbg_drawbg_c12ab2d73ae314b1 = typeof window.draw_bg == 'function' ? window.draw_bg : notDefined('window.draw_bg');
     imports.wbg.__wbg_drawagent_dabe46bf0ebf599b = function(arg0, arg1, arg2, arg3, arg4, arg5) {
         window.draw_agent(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3 >>> 0, arg4 >>> 0, arg5 >>> 0);
@@ -57,6 +84,7 @@ function initMemory(imports, maybe_memory) {
 function finalizeInit(instance, module) {
     wasm = instance.exports;
     init.__wbindgen_wasm_module = module;
+    cachedUint8Memory0 = new Uint8Array();
 
     wasm.__wbindgen_start();
     return wasm;
