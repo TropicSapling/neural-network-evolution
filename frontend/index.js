@@ -25,7 +25,7 @@ window.draw_bg = function draw_bg() {
 }
 
 window.draw_agent = function draw_agent(r, g, b, x, y, size) {
-	canvas.fillStyle = `rgb(r, g, b)`;
+	canvas.fillStyle = `rgb(${r}, ${g}, ${b})`;
 	canvas.fillRect(x, y, size, size);
 }
 
