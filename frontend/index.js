@@ -8,7 +8,7 @@ window.onload = function init() {
 	canvas = document.getElementById("game").getContext("2d");
 }
 
-export function draw_bg() {
+window.draw_bg = export function draw_bg() {
 	// Clear canvas
 	canvas.clearRect(0, 0, 600, 600);
 	
@@ -17,7 +17,7 @@ export function draw_bg() {
 	canvas.fillRect(0, 0, 600, 600);
 }
 
-export function draw_agent(r, g, b, x, y, size) {
+window.draw_agent = export function draw_agent(r, g, b, x, y, size) {
 	canvas.fillStyle = `rgb(r, g, b)`;
 	canvas.fillRect(x, y, size, size);
 }
