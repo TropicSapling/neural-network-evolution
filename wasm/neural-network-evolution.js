@@ -62,9 +62,9 @@ function getImports() {
     imports.wbg.__wbg_log_729ab6548cbcb934 = function(arg0, arg1) {
         console.log(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbg_drawbg_c12ab2d73ae314b1 = typeof draw_bg == 'function' ? draw_bg : notDefined('draw_bg');
+    imports.wbg.__wbg_drawbg_c12ab2d73ae314b1 = typeof window.draw_bg == 'function' ? window.draw_bg : notDefined('window.draw_bg');
     imports.wbg.__wbg_drawagent_dabe46bf0ebf599b = function(arg0, arg1, arg2, arg3, arg4, arg5) {
-        draw_agent(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3 >>> 0, arg4 >>> 0, arg5 >>> 0);
+        window.draw_agent(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3 >>> 0, arg4 >>> 0, arg5 >>> 0);
     };
 
     return imports;

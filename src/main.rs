@@ -10,10 +10,10 @@ extern "C" {
 	#[wasm_bindgen(js_namespace = console)]
 	fn log(s: &str);
 
-	#[wasm_bindgen]
+	#[wasm_bindgen(js_namespace = window)]
 	fn draw_bg();
 
-	#[wasm_bindgen]
+	#[wasm_bindgen(js_namespace = window)]
 	fn draw_agent(r: usize, g: usize, b: usize, x: usize, y: usize, size: usize);
 }
 
