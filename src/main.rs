@@ -34,12 +34,13 @@ pub unsafe fn run() {
 }
 
 fn draw_frame(agents: &Vec<Agent>) {
-	console_log!("Drawing frame.");
+	console_log!("Redrawing frame.");
 	draw_bg();
 	for agent in agents {
 		let Colour {r, g, b} = agent.colour;
 		let Pos    {x, y}    = agent.pos;
 
+		console_log!("draw_agent({r}, {g}, {b}, {x}, {y}, {})", agent.size);
 		draw_agent(r, g, b, x, y, agent.size);
 	}
 }
