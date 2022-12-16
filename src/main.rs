@@ -40,7 +40,6 @@ fn draw_frame(agents: &Vec<Agent>) {
 		let Colour {r, g, b} = agent.colour;
 		let Pos    {x, y}    = agent.pos;
 
-		console_log!("draw_agent({r}, {g}, {b}, {x}, {y}, {})", agent.size);
 		draw_agent(r, g, b, x, y, agent.size);
 	}
 }
