@@ -9,7 +9,9 @@ mod structs;
 mod game;
 mod ai;
 
+use rand::Rng;
 use wasm_bindgen::prelude::*;
+
 use js::*;
 use structs::*;
 use game::update_game;
@@ -23,17 +25,21 @@ fn main() {
 
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
+	let x = rand::thread_rng().gen_range(100.0..500.0);
+	let y = rand::thread_rng().gen_range(100.0..500.0);
+
 	// Just for testing
 	AGENTS.push(Agent {
 		neurons : vec![],
 		colour  : Colour {r: 67, g: 45, b: 123},
-		pos     : Pos    {x: 100.0, y: 100.0},
+		pos     : Pos    {x, y},
 		size    : 123,
 		angle   : 0.0,
 
 		moving  : true,
 		turning : true
 	});
+
 	console_log!("Spawned {:#?}.", AGENTS[0]);
 }
 

@@ -14,6 +14,7 @@ export interface InitOutput {
   readonly start: () => void;
   readonly run: () => void;
   readonly main: (a: number, b: number) => number;
+  readonly __wbindgen_exn_store: (a: number) => void;
   readonly __wbindgen_start: () => void;
 }
 
