@@ -1,18 +1,6 @@
 
 let wasm;
 
-/**
-*/
-export function start() {
-    wasm.start();
-}
-
-/**
-*/
-export function run() {
-    wasm.run();
-}
-
 const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
 
 cachedTextDecoder.decode();
@@ -31,6 +19,17 @@ function getStringFromWasm0(ptr, len) {
 }
 
 function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
+/**
+*/
+export function start() {
+    wasm.start();
+}
+
+/**
+*/
+export function run() {
+    wasm.run();
+}
 
 async function load(module, imports) {
     if (typeof Response === 'function' && module instanceof Response) {
