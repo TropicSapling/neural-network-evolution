@@ -34,6 +34,7 @@ pub unsafe fn start() {
 		moving  : true,
 		turning : true
 	});
+	console_log!("Spawned {:#?}.", AGENTS[0]);
 }
 
 #[wasm_bindgen]
