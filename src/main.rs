@@ -6,15 +6,13 @@
 #[macro_use]
 mod js;
 mod structs;
+mod helpers;
 mod game;
 mod ai;
 
-use std::{ops::Range, cmp::PartialOrd};
-use rand::{Rng, distributions::uniform::SampleUniform};
 use wasm_bindgen::prelude::*;
 
-use js::*;
-use structs::*;
+use {js::*, structs::*};
 use game::update_game;
 use ai::update_ai;
 
@@ -24,31 +22,11 @@ fn main() {
 	println!("Don't run it this way; compile to wasm!")
 }
 
-fn rand_range<T: SampleUniform + PartialOrd>(range: Range<T>) -> T {
-	rand::thread_rng().gen_range(range)
-}
-
-fn rand_col() -> Colour {
-	Colour {r: rand_range(0..256), g: rand_range(0..256), b: rand_range(0..256)}
-}
-
-fn rand_pos() -> Pos {
-	Pos {x: rand_range(0.0..450.0), y: rand_range(0.0..450.0)}
-}
-
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
 	// Just for testing
-	AGENTS.push(Agent {
-		neurons : vec![],
-		colour  : rand_col(),
-		pos     : rand_pos(),
-		size    : rand_range(64..128),
-		angle   : 0.0,
-
-		moving  : true,
-		turning : true
-	});
+	AGENTS.push(Agent::new());
+	AGENTS.push(Agent::new());
 
 	console_log!("Spawned {:#?}.", AGENTS[0]);
 }
@@ -64,9 +42,9 @@ fn draw_frame(agents: &Vec<Agent>) {
 	console_log!("Redrawing frame.");
 	draw_bg();
 	for agent in agents {
-		let Colour {r, g, b} = agent.colour;
-		let Pos    {x, y}    = agent.pos;
+		let Colour {r, g, b} = agent.body.colour;
+		let Pos    {x, y}    = agent.body.pos;
 
-		draw_agent(r, g, b, x, y, agent.size);
+		draw_agent(r, g, b, x, y, agent.body.size);
 	}
 }
