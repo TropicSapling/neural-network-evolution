@@ -8,6 +8,7 @@ const ROT_SPEED: f64 = 0.02;
 pub fn update_game(agents: &mut Vec<Agent>) {
 	for agent in &mut *agents {
 		mov(&mut agent.body);
+		shrink(&mut agent.body);
 	}
 
 	handle_collisions(agents);
@@ -22,6 +23,10 @@ fn mov(body: &mut Body) {
 		body.pos.x += MOV_SPEED * body.angle.cos();
 		body.pos.y += MOV_SPEED * body.angle.sin();
 	}
+}
+
+fn shrink(body: &mut Body) {
+	body.size *= 0.999;
 }
 
 fn handle_collisions(agents: &mut Vec<Agent>) {

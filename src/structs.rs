@@ -41,7 +41,7 @@ pub struct Body {
 	pub colour: Colour,
 
 	pub pos   : Pos,
-	pub size  : usize,
+	pub size  : f64,
 	pub angle : f64,
 
 	pub moving  : bool,
@@ -72,7 +72,7 @@ impl Agent {
 			body: Body {
 				colour  : Colour::new(),
 				pos     : Pos::new(),
-				size    : rand_range(64..128),
+				size    : rand_range(64.0..128.0),
 				angle   : 0.0,
 
 				moving  : true,
