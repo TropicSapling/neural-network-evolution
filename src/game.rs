@@ -66,6 +66,9 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 	for i in eaten {
 		agents.remove(i);
 	}
+
+	// Sort agents by size so that larger ones are drawn on top of smaller ones
+	agents.sort_unstable_by(|a, b| b.body.size.partial_cmp(&a.body.size).unwrap())
 }
 
 fn eat(eater: &mut Body, size_l: f64, size_s: f64) {
