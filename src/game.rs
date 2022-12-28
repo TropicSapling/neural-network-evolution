@@ -48,12 +48,12 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 					// #i larger => eats #j
 					eat(&mut agents[i].body, size, size2);
 					eaten.push(j);
-					console_log!("Agent#{i} ate Agent#{j}."); // debug
+					console_log!("[diff1={diff1:?}, diff2={diff2:?}] Agent#{i} ate Agent#{j}."); // debug
 				} else if diff1 > (5.0, 5.0) && diff2 < (-5.0, -5.0) {
 					// #j larger => eats #i
 					eat(&mut agents[j].body, size2, size);
 					eaten.push(i);
-					console_log!("Agent#{j} ate Agent#{i}."); // debug
+					console_log!("[diff1={diff1:?}, diff2={diff2:?}] Agent#{j} ate Agent#{i}."); // debug
 				}
 			}
 		}
