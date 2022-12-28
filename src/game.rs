@@ -35,10 +35,6 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
 		let (pos, size) = (agents[i].body.pos, agents[i].body.size);
 
-		// Ensure no agent goes outside the game borders
-		agents[i].body.pos.x = pos.x.min(GAME_SIZE - size as f64).max(0.0);
-		agents[i].body.pos.y = pos.y.min(GAME_SIZE - size as f64).max(0.0);
-
 		// Check for collisions with other agents
 		for j in 0..agents.len() {
 			if i != j {
@@ -61,6 +57,10 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 				}
 			}
 		}
+
+		// Ensure no agent goes outside the game borders
+		agents[i].body.pos.x = pos.x.min(GAME_SIZE - size as f64).max(0.0);
+		agents[i].body.pos.y = pos.y.min(GAME_SIZE - size as f64).max(0.0);
 	}
 
 	for i in eaten {
