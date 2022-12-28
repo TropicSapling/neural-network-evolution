@@ -55,7 +55,7 @@ pub struct Colour {
 	pub b: usize
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Pos {pub x: f64, pub y: f64}
 
 ////////////////////////////////
