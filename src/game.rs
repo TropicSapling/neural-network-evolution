@@ -41,21 +41,23 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 
 		// Check for collisions with other agents
 		for j in 0..agents.len() {
-			let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
-
-			let diff1 = (pos.x      - pos2.x      , pos.y      - pos2.y      );
-			let diff2 = (pos.x+size - pos2.x+size2, pos.y+size - pos2.y+size2);
-
-			if diff1 < (-5.0, -5.0) && diff2 > (5.0, 5.0) {
-				// #i larger => eats #j
-				console_log!("Agent#{i} ate Agent#{j}.");
-				agents[i].body.size += size2.sqrt();
-				eaten.push(j);
-			} else if diff1 > (5.0, 5.0) && diff2 < (-5.0, -5.0) {
-				// #j larger => eats #i
-				console_log!("Agent#{j} ate Agent#{i}.");
-				agents[j].body.size += size.sqrt();
-				eaten.push(i);
+			if i != j {
+				let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
+	
+				let diff1 = (pos.x      - pos2.x      , pos.y      - pos2.y      );
+				let diff2 = (pos.x+size - pos2.x+size2, pos.y+size - pos2.y+size2);
+	
+				if diff1 < (-5.0, -5.0) && diff2 > (5.0, 5.0) {
+					// #i larger => eats #j
+					eat(&mut agents[i].body, size, size2);
+					eaten.push(j);
+					console_log!("Agent#{i} ate Agent#{j}."); // debug
+				} else if diff1 > (5.0, 5.0) && diff2 < (-5.0, -5.0) {
+					// #j larger => eats #i
+					eat(&mut agents[j].body, size2, size);
+					eaten.push(i);
+					console_log!("Agent#{j} ate Agent#{i}."); // debug
+				}
 			}
 		}
 	}
@@ -63,4 +65,13 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 	for i in eaten {
 		agents.remove(i);
 	}
+}
+
+fn eat(eater: &mut Body, size_l: f64, size_s: f64) {
+	let new_size_l = (size_l.powf(2.0) + size_s.powf(2.0)).sqrt();
+
+	eater.pos.x -= (new_size_l - size_l)/2.0;
+	eater.pos.y -= (new_size_l - size_l)/2.0;
+
+	eater.size = new_size_l;
 }
