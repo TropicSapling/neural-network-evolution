@@ -1,4 +1,4 @@
-use crate::structs::*;
+use crate::{js::*, structs::*};
 
 const GAME_SIZE: f64 = 600.0;
 
@@ -48,11 +48,13 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 
 			if diff1 < (-5.0, -5.0) && diff2 > (5.0, 5.0) {
 				// #i larger => eats #j
-				agents[i].body.size += size2;
+				console_log!("Agent#{i} ate Agent#{j}.");
+				agents[i].body.size += size2.sqrt();
 				eaten.push(j);
 			} else if diff1 > (5.0, 5.0) && diff2 < (-5.0, -5.0) {
 				// #j larger => eats #i
-				agents[j].body.size += size;
+				console_log!("Agent#{j} ate Agent#{i}.");
+				agents[j].body.size += size.sqrt();
 				eaten.push(i);
 			}
 		}
