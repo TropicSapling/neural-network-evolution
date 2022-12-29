@@ -40,7 +40,6 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 			if i != j {
 				let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
 
-				// TODO: fix, something is not quite right!
 				let diff1 = (pos.x      - pos2.x      , pos.y      - pos2.y      );
 				let diff2 = (pos.x+size - pos2.x+size2, pos.y+size - pos2.y+size2);
 
@@ -48,11 +47,13 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 					// #i larger => eats #j
 					eat(&mut agents[i].body, size, size2);
 					eaten.push(j);
+					console_log!("diff1={diff1:?}, diff2={diff2:?}");
 					console_log!("Agent#{i} ate Agent#{j}."); // debug
 				} else if gt(diff1, (5.0, 5.0)) && lt(diff2, (-5.0, -5.0)) {
 					// #j larger => eats #i
 					eat(&mut agents[j].body, size2, size);
 					eaten.push(i);
+					console_log!("diff1={diff1:?}, diff2={diff2:?}");
 					console_log!("Agent#{j} ate Agent#{i}."); // debug
 				}
 			}
