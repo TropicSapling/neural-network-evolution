@@ -25,14 +25,13 @@ fn main() {
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
 	// Just for testing
-	AGENTS.push(Agent::new());
-	AGENTS.push(Agent::new());
-	AGENTS.push(Agent::new());
-	AGENTS.push(Agent::new());
+	for _ in 0..8 {
+		AGENTS.push(Agent::new());
+	}
 
 	console_log!("Spawned {:#?}.", AGENTS[0]);
 	console_log!("");
-	console_log!("Starting version 0.0.4");
+	console_log!("Starting version 0.0.5");
 }
 
 #[wasm_bindgen]
