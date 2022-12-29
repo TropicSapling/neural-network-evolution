@@ -40,6 +40,8 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 			if i != j {
 				let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
 
+				// This whole part should just be rewritten.
+				// Need to check size larger first, then check if almost overlapping.
 				let diff1 = (pos.x      - (pos2.x      ), pos.y      - (pos2.y      ));
 				let diff2 = (pos.x+size - (pos2.x+size2), pos.y+size - (pos2.y+size2));
 
