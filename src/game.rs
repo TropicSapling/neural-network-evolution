@@ -43,12 +43,12 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 				let diff1 = (pos.x      - (pos2.x      ), pos.y      - (pos2.y      ));
 				let diff2 = (pos.x+size - (pos2.x+size2), pos.y+size - (pos2.y+size2));
 
-				if lt(diff1, (-32.0, -32.0)) && gt(diff2, (32.0, 32.0)) {
+				if lt(diff1, (-0.0, -0.0)) && gt(diff2, (0.0, 0.0)) {
 					// #i larger => eats #j
 					eat(&mut agents[i].body, size, size2);
 					eaten.push(j);
 					console_log!("Agent#{i} ate Agent#{j}."); // debug
-				} else if gt(diff1, (32.0, 32.0)) && lt(diff2, (-32.0, -32.0)) {
+				} else if gt(diff1, (0.0, 0.0)) && lt(diff2, (-0.0, -0.0)) {
 					// #j larger => eats #i
 					eat(&mut agents[j].body, size2, size);
 					eaten.push(i);
