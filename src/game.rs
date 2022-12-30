@@ -78,9 +78,9 @@ fn closely_overlapping(pos: Pos, pos2: Pos, size: f64, size2: f64) -> bool {
 	let overlap_width  = overlap_x2 - overlap_x1;
 	let overlap_height = overlap_y2 - overlap_y1;
 
-	overlap_width                > 0.0                             &&
-	overlap_height               > 0.0                             &&
-	overlap_width*overlap_height > (0.9*size.min(size2)).powf(2.0)
+	overlap_width                > 0.0                           &&
+	overlap_height               > 0.0                           &&
+	overlap_width*overlap_height > 0.9*size.min(size2).powf(2.0)
 }
 
 fn eat(eater: &mut Body, size_l: f64, size_s: f64) {
