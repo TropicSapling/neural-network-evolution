@@ -62,7 +62,7 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 	}
 
 	// Remove dead agents
-	agents.retain(|agent| agent.alive);
+	agents.retain(|agent| agent.alive && agent.body.size > 32.0);
 
 	// Sort agents by size so that larger ones are drawn on top of smaller ones
 	agents.sort_unstable_by(|a, b| a.body.size.partial_cmp(&b.body.size).unwrap())
