@@ -1,4 +1,4 @@
-use crate::{helpers::*, js::*, structs::*};
+use crate::{js::*, structs::*};
 
 const GAME_SIZE: f64 = 600.0;
 
@@ -40,21 +40,18 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 			if i != j {
 				let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
 
-				// This whole part should just be rewritten.
-				// Need to check size larger first, then check if almost overlapping.
-				let diff1 = (pos.x      - (pos2.x      ), pos.y      - (pos2.y      ));
-				let diff2 = (pos.x+size - (pos2.x+size2), pos.y+size - (pos2.y+size2));
-
-				if lt(diff1, (-0.0, -0.0)) && gt(diff2, (0.0, 0.0)) {
-					// #i larger => eats #j
-					eat(&mut agents[i].body, size, size2);
-					eaten.push(j);
-					console_log!("Agent#{i} ate Agent#{j}."); // debug
-				} else if gt(diff1, (0.0, 0.0)) && lt(diff2, (-0.0, -0.0)) {
-					// #j larger => eats #i
-					eat(&mut agents[j].body, size2, size);
-					eaten.push(i);
-					console_log!("Agent#{j} ate Agent#{i}."); // debug
+				if closely_overlapping(pos, pos2, size, size2) {
+					if size > size2*1.1 {
+						// #i larger => eats #j
+						eat(&mut agents[i].body, size, size2);
+						eaten.push(j);
+						console_log!("Agent#{i} ate Agent#{j}."); // debug
+					} else if size2 > size*1.1 {
+						// #j larger => eats #i
+						eat(&mut agents[j].body, size2, size);
+						eaten.push(i);
+						console_log!("Agent#{j} ate Agent#{i}."); // debug
+					}
 				}
 			}
 		}
@@ -70,6 +67,23 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 
 	// Sort agents by size so that larger ones are drawn on top of smaller ones
 	agents.sort_unstable_by(|a, b| a.body.size.partial_cmp(&b.body.size).unwrap())
+}
+
+fn closely_overlapping(pos: Pos, pos2: Pos, size: f64, size2: f64) -> bool {
+	// Calculates the overlapping area and returns true if >90% overlapping area
+
+	let overlap_x1 = pos.x.max(pos2.x);
+	let overlap_x2 = (pos.x+size).min(pos2.x+size);
+
+	let overlap_y1 = pos.y.max(pos2.y);
+	let overlap_y2 = (pos.y+size).min(pos2.y+size);
+
+	let overlap_width  = overlap_x2 - overlap_x1;
+	let overlap_height = overlap_y2 - overlap_y1;
+
+	overlap_width                > 0.0                 &&
+	overlap_height               > 0.0                 &&
+	overlap_width*overlap_height > 0.9*size.min(size2)
 }
 
 fn eat(eater: &mut Body, size_l: f64, size_s: f64) {
