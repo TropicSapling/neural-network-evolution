@@ -31,25 +31,27 @@ fn shrink(body: &mut Body) {
 
 fn handle_collisions(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
+		if !agents[i].alive {continue} // skip dead agents
+
 		let (pos, size) = (agents[i].body.pos, agents[i].body.size);
 
 		// Check for collisions with other agents
 		for j in 0..agents.len() {
-			if i != j {
-				let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
+			if i == j || !agents[j].alive {continue} // skip self & dead agents
 
-				if closely_overlapping(pos, pos2, size, size2) {
-					if size > size2*1.1 {
-						// #i larger => eats #j
-						eat(&mut agents[i].body, size, size2);
-						agents[j].alive = false;
-						console_log!("Agent#{i} ate Agent#{j}."); // debug
-					} else if size2 > size*1.1 {
-						// #j larger => eats #i
-						eat(&mut agents[j].body, size2, size);
-						agents[i].alive = false;
-						console_log!("Agent#{j} ate Agent#{i}."); // debug
-					}
+			let (pos2, size2) = (agents[j].body.pos, agents[j].body.size);
+
+			if closely_overlapping(pos, pos2, size, size2) {
+				if size > size2*1.1 {
+					// #i larger => eats #j
+					eat(&mut agents[i].body, size, size2);
+					agents[j].alive = false;
+					console_log!("Agent#{i} ate Agent#{j}."); // debug
+				} else if size2 > size*1.1 {
+					// #j larger => eats #i
+					eat(&mut agents[j].body, size2, size);
+					agents[i].alive = false;
+					console_log!("Agent#{j} ate Agent#{i}."); // debug
 				}
 			}
 		}
