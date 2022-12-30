@@ -70,10 +70,10 @@ fn closely_overlapping(pos: Pos, pos2: Pos, size: f64, size2: f64) -> bool {
 	// Calculates the overlapping area and returns true if >90% overlapping area
 
 	let overlap_x1 = pos.x.max(pos2.x);
-	let overlap_x2 = (pos.x+size).min(pos2.x+size);
+	let overlap_x2 = (pos.x+size).min(pos2.x+size2);
 
 	let overlap_y1 = pos.y.max(pos2.y);
-	let overlap_y2 = (pos.y+size).min(pos2.y+size);
+	let overlap_y2 = (pos.y+size).min(pos2.y+size2);
 
 	let overlap_width  = overlap_x2 - overlap_x1;
 	let overlap_height = overlap_y2 - overlap_y1;
