@@ -30,8 +30,6 @@ fn shrink(body: &mut Body) {
 }
 
 fn handle_collisions(agents: &mut Vec<Agent>) {
-	let mut eaten = vec![];
-
 	for i in 0..agents.len() {
 		let (pos, size) = (agents[i].body.pos, agents[i].body.size);
 
@@ -44,12 +42,12 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 					if size > size2*1.1 {
 						// #i larger => eats #j
 						eat(&mut agents[i].body, size, size2);
-						eaten.push(j);
+						agents[j].alive = false;
 						console_log!("Agent#{i} ate Agent#{j}."); // debug
 					} else if size2 > size*1.1 {
 						// #j larger => eats #i
 						eat(&mut agents[j].body, size2, size);
-						eaten.push(i);
+						agents[i].alive = false;
 						console_log!("Agent#{j} ate Agent#{i}."); // debug
 					}
 				}
@@ -61,9 +59,8 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 		agents[i].body.pos.y = pos.y.min(GAME_SIZE - size as f64).max(0.0);
 	}
 
-	for i in eaten {
-		agents.remove(i);
-	}
+	// Remove dead agents
+	agents.retain(|agent| agent.alive);
 
 	// Sort agents by size so that larger ones are drawn on top of smaller ones
 	agents.sort_unstable_by(|a, b| a.body.size.partial_cmp(&b.body.size).unwrap())

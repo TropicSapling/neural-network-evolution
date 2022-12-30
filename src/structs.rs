@@ -3,7 +3,8 @@ use crate::helpers::*;
 #[derive(Debug)]
 pub struct Agent {
 	pub brain : Brain,
-	pub body  : Body
+	pub body  : Body,
+	pub alive : bool
 }
 
 ////////////////////////////////
@@ -77,7 +78,9 @@ impl Agent {
 
 				moving  : true,
 				turning : true
-			}
+			},
+
+			alive: true
 		}
 	}
 }
