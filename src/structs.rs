@@ -73,8 +73,8 @@ impl Agent {
 			body: Body {
 				colour  : Colour::new(),
 				pos     : Pos::new(),
-				size    : rand_range(64.0..128.0),
-				angle   : 0.0,
+				size    : rand_range(64.0..96.0),
+				angle   : rand_range(0.0..360.0),
 
 				moving  : true,
 				turning : true

@@ -17,6 +17,7 @@ pub fn update_game(agents: &mut Vec<Agent>) {
 fn mov(body: &mut Body) {
 	if body.turning {
 		body.angle += ROT_SPEED;
+		body.angle %= 360.0;
 	}
 
 	if body.moving {
