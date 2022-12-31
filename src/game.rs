@@ -1,4 +1,4 @@
-use crate::{js::*, structs::*};
+use crate::structs::*;
 
 const GAME_SIZE: f64 = 600.0;
 
@@ -51,12 +51,10 @@ fn handle_collisions(agents: &mut Vec<Agent>) {
 					// #i larger => eats #j
 					eat(&mut agents[i].body, size, size2);
 					agents[j].alive = false;
-					console_log!("Agent#{i} ate Agent#{j}."); // debug
 				} else if size2 > size*1.1 {
 					// #j larger => eats #i
 					eat(&mut agents[j].body, size2, size);
 					agents[i].alive = false;
-					console_log!("Agent#{j} ate Agent#{i}."); // debug
 				}
 			}
 		}
