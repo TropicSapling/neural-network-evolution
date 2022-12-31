@@ -26,7 +26,11 @@ fn mov(body: &mut Body) {
 }
 
 fn shrink(body: &mut Body) {
-	body.size *= 0.999;
+	let size0 = body.size;
+
+	body.size  *= 0.999;
+	body.pos.x += (size0 - body.size)/2.0;
+	body.pos.y += (size0 - body.size)/2.0;
 }
 
 fn handle_collisions(agents: &mut Vec<Agent>) {
