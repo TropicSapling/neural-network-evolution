@@ -36,7 +36,7 @@ pub unsafe fn start() {
 #[wasm_bindgen]
 pub unsafe fn run() {
 	// Randomly spawn new agents
-	if rand_range(0..256) == 42 {
+	if rand_range(0..64) == 42 {
 		AGENTS.push(Agent::new());
 	}
 
