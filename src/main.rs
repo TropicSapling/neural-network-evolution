@@ -11,7 +11,7 @@ mod ai;
 
 use wasm_bindgen::prelude::*;
 
-use {js::*, structs::*};
+use {helpers::*, js::*, structs::*};
 use game::update_game;
 use ai::update_ai;
 
@@ -24,17 +24,22 @@ fn main() {
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
 	// Just for testing
-	for _ in 0..8 {
+	for _ in 0..rand_range(8..16) {
 		AGENTS.push(Agent::new());
 	}
 
 	console_log!("Spawned {:#?}.", AGENTS[0]);
 	console_log!("");
-	console_log!("Starting version 0.0.15");
+	console_log!("Starting version 0.0.16");
 }
 
 #[wasm_bindgen]
 pub unsafe fn run() {
+	// Randomly spawn new agents
+	if rand_range(0..256) == 42 {
+		AGENTS.push(Agent::new());
+	}
+
 	update_ai(&mut AGENTS);
 	update_game(&mut AGENTS);
 	draw_frame(&AGENTS);
