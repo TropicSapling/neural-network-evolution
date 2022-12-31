@@ -15,7 +15,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		output[0].excitation = rand_range(0..=1);
 		output[1].excitation = rand_range(0..=1);
 
-		agent.body.moving  = output[0].excitation > output[0].act_threshold;
-		agent.body.turning = output[1].excitation > output[1].act_threshold;
+		agent.body.moving  = output[0].excitation >= output[0].act_threshold;
+		agent.body.turning = output[1].excitation >= output[1].act_threshold;
 	}
 }
