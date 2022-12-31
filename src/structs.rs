@@ -20,7 +20,7 @@ pub struct Brain {
 
 #[derive(Debug)]
 pub struct Neuron {
-	pub excitation: isize,
+	pub excitation: usize,
 	pub tick_drain: usize,
 
 	pub act_threshold: usize,

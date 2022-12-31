@@ -1,7 +1,6 @@
 // $ cargo install wasm-bindgen
 // $ cargo install wasm-bindgen-cli
-// $ cargo build --target wasm32-unknown-unknown --release
-// $ wasm-bindgen target/wasm32-unknown-unknown/release/neural-network-evolution.wasm --target web --out-dir wasm
+// $ compile
 
 #[macro_use]
 mod js;
@@ -36,7 +35,7 @@ pub unsafe fn start() {
 
 #[wasm_bindgen]
 pub unsafe fn run() {
-	update_ai(&AGENTS);
+	update_ai(&mut AGENTS);
 	update_game(&mut AGENTS);
 	draw_frame(&AGENTS);
 }
