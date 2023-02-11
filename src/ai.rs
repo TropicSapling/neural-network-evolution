@@ -8,6 +8,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		// Just for testing
 		input[0].excitation = rand_range(0..=1);
 		input[1].excitation = rand_range(0..=1);
+		input[2].excitation = rand_range(0..=1);
 
 		// TODO [...]
 
