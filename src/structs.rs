@@ -85,6 +85,28 @@ impl Agent {
 	}
 }
 
+impl Brain {
+	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
+		let input  = &mut self.neurons_in;
+		let output = &mut self.neurons_out;
+
+		// Just for testing
+		input[0].excitation = rand_range(0..=1);
+		input[1].excitation = rand_range(0..=1);
+		input[2].excitation = rand_range(0..=1);
+
+		// Just for testing
+		output[0].excitation = rand_range(0..=1);
+		output[1].excitation = rand_range(0..=1);
+
+		for neuron in &self.neurons_hidden {
+			// TODO [...]
+		}
+
+		&self.neurons_out
+	}
+}
+
 impl Neuron {
 	fn new() -> Neuron {
 		Neuron {
