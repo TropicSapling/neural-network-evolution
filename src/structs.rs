@@ -99,8 +99,12 @@ impl Brain {
 		output[0].excitation = rand_range(0..=1);
 		output[1].excitation = rand_range(0..=1);
 
-		for neuron in &self.neurons_hidden {
+		for neuron in &mut self.neurons_hidden {
 			// TODO [...]
+
+			if neuron.excitation >= neuron.tick_drain {
+				neuron.excitation -= neuron.tick_drain
+			}
 		}
 
 		&self.neurons_out
