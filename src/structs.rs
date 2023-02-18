@@ -82,8 +82,8 @@ impl Agent {
 				size    : rand_range(64.0..96.0),
 				angle   : rand_range(0.0..360.0),
 
-				moving  : true,
-				turning : true
+				moving  : false,
+				turning : false
 			},
 
 			alive: true
@@ -98,33 +98,14 @@ impl Brain {
 		self.neurons_in[1].excitation = rand_range(0..=1);
 		self.neurons_in[2].excitation = rand_range(0..=1);
 
+		for i in 0..self.neurons_in.len() {
+			self.update_neuron(i, true)
+		}
+
 		for i in 0..self.neurons_hidden.len() {
-			let neuron = &self.neurons_hidden[i];
+			self.update_neuron(i, false);
 
-			// If neuron activated...
-			if neuron.excitation >= neuron.act_threshold {
-				// ... prepare all connections for activation
-				let mut activations = vec![];
-				for conn in &neuron.next_conn {
-					activations.push(conn.clone());
-				}
-
-				// ... and then activate the connections
-				for conn in activations {
-					let recv_neuron = if conn.dest_index < OUTS {
-						&mut self.neurons_out[conn.dest_index]
-					} else {
-						&mut self.neurons_hidden[conn.dest_index - OUTS]
-					};
-
-					if conn.weight < 0 {
-						recv_neuron.inhibit(-conn.weight as usize)
-					} else {
-						recv_neuron.excite(conn.weight as usize)
-					}
-				}
-			}
-
+			// Drain neuron
 			let neuron = &mut self.neurons_hidden[i];
 			if neuron.excitation >= neuron.tick_drain {
 				neuron.excitation -= neuron.tick_drain
@@ -132,6 +113,37 @@ impl Brain {
 		}
 
 		&self.neurons_out
+	}
+
+	fn update_neuron(&mut self, i: usize, is_input: bool) {
+		let neuron = match is_input {
+			true => &self.neurons_in[i],
+			_    => &self.neurons_hidden[i]
+		};
+
+		// If neuron activated...
+		if neuron.excitation >= neuron.act_threshold {
+			// ... prepare all connections for activation
+			let mut activations = vec![];
+			for conn in &neuron.next_conn {
+				activations.push(conn.clone());
+			}
+
+			// ... and then activate the connections
+			for conn in activations {
+				let recv_neuron = if conn.dest_index < OUTS {
+					&mut self.neurons_out[conn.dest_index]
+				} else {
+					&mut self.neurons_hidden[conn.dest_index - OUTS]
+				};
+
+				if conn.weight < 0 {
+					recv_neuron.inhibit(-conn.weight as usize)
+				} else {
+					recv_neuron.excite(conn.weight as usize)
+				}
+			}
+		}
 	}
 }
 
