@@ -98,6 +98,14 @@ impl Brain {
 		self.neurons_in[1].excitation = rand_range(0..=1);
 		self.neurons_in[2].excitation = rand_range(0..=1);
 
+		// Drain output neurons from previous excitation
+		for i in 0..OUTS {
+			let neuron = &mut self.neurons_out[i];
+			if neuron.excitation >= neuron.tick_drain {
+				neuron.excitation -= neuron.tick_drain
+			}
+		}
+
 		for i in 0..self.neurons_in.len() {
 			self.update_neuron(i, true)
 		}
