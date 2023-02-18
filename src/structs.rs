@@ -151,7 +151,7 @@ impl Neuron {
 	fn new(recv_neuron_count: usize) -> Neuron {
 		Neuron {
 			excitation: 0,
-			tick_drain: 0,
+			tick_drain: 1,
 
 			act_threshold: 1,
 
