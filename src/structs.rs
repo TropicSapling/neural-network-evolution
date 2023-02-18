@@ -28,7 +28,7 @@ pub struct Neuron {
 	pub next_conn: Vec<ForwardConn>
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ForwardConn {
 	pub dest_index: usize,
 	pub speed: usize,
@@ -99,9 +99,29 @@ impl Brain {
 		output[0].excitation = rand_range(0..=1);
 		output[1].excitation = rand_range(0..=1);
 
-		for neuron in &mut self.neurons_hidden {
-			// TODO [...]
+		for i in 0..self.neurons_hidden.len() {
+			let neuron = &self.neurons_hidden[i];
 
+			// If neuron activated...
+			if neuron.excitation >= neuron.act_threshold {
+				// ... prepare all connections for activation
+				let mut activations = vec![];
+				for conn in &neuron.next_conn {
+					activations.push(conn.clone());
+				}
+
+				// ... and then activate the connections
+				for conn in activations {
+					let recv_neuron = &mut self.neurons_hidden[conn.dest_index];
+					if conn.weight < 0 {
+						recv_neuron.inhibit(-conn.weight as usize)
+					} else {
+						recv_neuron.excite(conn.weight as usize)
+					}
+				}
+			}
+
+			let neuron = &mut self.neurons_hidden[i];
 			if neuron.excitation >= neuron.tick_drain {
 				neuron.excitation -= neuron.tick_drain
 			}
@@ -121,6 +141,18 @@ impl Neuron {
 
 			next_conn: vec![]
 		}
+	}
+
+	fn inhibit(&mut self, amount: usize) {
+		if self.excitation > amount {
+			self.excitation -= amount
+		} else {
+			self.excitation = 0
+		}
+	}
+
+	fn excite(&mut self, amount: usize) {
+		self.excitation += amount
 	}
 }
 
