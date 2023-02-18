@@ -1,5 +1,7 @@
 use crate::helpers::*;
 
+const OUTS: usize = 2;
+
 #[derive(Debug)]
 pub struct Agent {
 	pub brain : Brain,
@@ -35,6 +37,10 @@ pub struct ForwardConn {
 	pub weight: isize
 }
 
+// TODO:
+// Strengthen/weaken connection weight if receiving neuron
+// activates shortly after/before connection fired.
+
 ////////////////////////////////
 
 #[derive(Debug)]
@@ -65,9 +71,9 @@ impl Agent {
 	pub fn new() -> Agent {
 		Agent {
 			brain: Brain {
-				neurons_in     : [Neuron::new(), Neuron::new(), Neuron::new()],
-				neurons_hidden : vec![],
-				neurons_out    : [Neuron::new(), Neuron::new()]
+				neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
+				neurons_hidden : vec![                Neuron::new(3)                ],
+				neurons_out    :     [Neuron::new(3),                 Neuron::new(3)]
 			},
 
 			body: Body {
@@ -87,17 +93,10 @@ impl Agent {
 
 impl Brain {
 	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
-		let input  = &mut self.neurons_in;
-		let output = &mut self.neurons_out;
-
 		// Just for testing
-		input[0].excitation = rand_range(0..=1);
-		input[1].excitation = rand_range(0..=1);
-		input[2].excitation = rand_range(0..=1);
-
-		// Just for testing
-		output[0].excitation = rand_range(0..=1);
-		output[1].excitation = rand_range(0..=1);
+		self.neurons_in[0].excitation = rand_range(0..=1);
+		self.neurons_in[1].excitation = rand_range(0..=1);
+		self.neurons_in[2].excitation = rand_range(0..=1);
 
 		for i in 0..self.neurons_hidden.len() {
 			let neuron = &self.neurons_hidden[i];
@@ -112,7 +111,12 @@ impl Brain {
 
 				// ... and then activate the connections
 				for conn in activations {
-					let recv_neuron = &mut self.neurons_hidden[conn.dest_index];
+					let recv_neuron = if conn.dest_index < OUTS {
+						&mut self.neurons_out[conn.dest_index]
+					} else {
+						&mut self.neurons_hidden[conn.dest_index - OUTS]
+					};
+
 					if conn.weight < 0 {
 						recv_neuron.inhibit(-conn.weight as usize)
 					} else {
@@ -132,14 +136,18 @@ impl Brain {
 }
 
 impl Neuron {
-	fn new() -> Neuron {
+	fn new(recv_neuron_count: usize) -> Neuron {
 		Neuron {
 			excitation: 0,
 			tick_drain: 0,
 
 			act_threshold: 1,
 
-			next_conn: vec![]
+			next_conn: vec![ForwardConn {
+				dest_index: rand_range(0..recv_neuron_count),
+				speed: 0,
+				weight: 1
+			}]
 		}
 	}
 
