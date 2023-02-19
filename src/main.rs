@@ -28,13 +28,13 @@ pub unsafe fn start() {
 		AGENTS.push(Agent::new(&mut AGENTS));
 	}
 
-	console_log!("Starting version 0.0.35");
+	console_log!("Starting version 0.0.36");
 }
 
 #[wasm_bindgen]
 pub unsafe fn run(inverse_spawn_rate: usize) {
 	// Randomly spawn new agents
-	if rand_range(0..inverse_spawn_rate) == 42 {
+	if rand_range(0..inverse_spawn_rate) == 0 {
 		AGENTS.push(Agent::new(&mut AGENTS));
 	}
 
