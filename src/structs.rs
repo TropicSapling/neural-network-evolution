@@ -33,10 +33,11 @@ pub struct Neuron {
 }
 
 impl fmt::Debug for Neuron {
+	// Print neuron debug info in a concise way
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     	let mut s = String::from("Neuron->[");
     	for conn in &self.next_conn {
-    		s += &format!("{}*{}", conn.weight, conn.dest_index)
+    		s += &format!("{}*#{}", conn.weight, conn.dest_index)
     	}
 
         write!(f, "{s}]")
