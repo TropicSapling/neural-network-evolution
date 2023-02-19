@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::helpers::*;
+use crate::{helpers::*, js::*};
 
 const OUTS: usize = 2;
 
@@ -99,7 +99,12 @@ impl Agent {
 				let colour = parent.body.colour.clone();
 				let brain  = parent.brain.clone();
 
-				return Agent::with(brain, colour, child_size).mutate()
+				let child = Agent::with(brain, colour, child_size).mutate();
+
+				console_log!("NEW CHILD NEURAL NETWORK: {:#?}", child.brain);
+				console_log!("");
+
+				return child
 			}
 		}
 
