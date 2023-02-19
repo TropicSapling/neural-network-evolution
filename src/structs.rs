@@ -87,7 +87,7 @@ impl Agent {
 			neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
 			neurons_hidden : vec![                Neuron::new(3)                ],
 			neurons_out    :     [Neuron::new(3),                 Neuron::new(3)]
-		}, Colour::new(), rand_range(48.0..96.0))
+		}, Colour::new(), rand_range(48.0..80.0))
 	}
 
 	fn with(brain: Brain, colour: Colour, size: f64) -> Agent {
