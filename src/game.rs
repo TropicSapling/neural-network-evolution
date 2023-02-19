@@ -29,7 +29,7 @@ fn mov(body: &mut Body) {
 fn shrink(body: &mut Body) {
 	let size0 = body.size;
 
-	body.size  *= 0.999;
+	body.size  *= 0.9995;
 	body.pos.x += (size0 - body.size)/2.0;
 	body.pos.y += (size0 - body.size)/2.0;
 }
