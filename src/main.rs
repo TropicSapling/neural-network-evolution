@@ -25,19 +25,19 @@ fn main() {
 pub unsafe fn start() {
 	// Just for testing
 	for _ in 0..rand_range(8..16) {
-		AGENTS.push(Agent::new(&AGENTS));
+		AGENTS.push(Agent::new(&mut AGENTS));
 	}
 
 	console_log!("Spawned {:#?}.", AGENTS[0]);
 	console_log!("");
-	console_log!("Starting version 0.0.23");
+	console_log!("Starting version 0.0.24");
 }
 
 #[wasm_bindgen]
 pub unsafe fn run() {
 	// Randomly spawn new agents
 	if rand_range(0..64) == 42 {
-		AGENTS.push(Agent::new(&AGENTS));
+		AGENTS.push(Agent::new(&mut AGENTS));
 	}
 
 	update_ai(&mut AGENTS);

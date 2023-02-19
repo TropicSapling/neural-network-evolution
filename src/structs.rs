@@ -68,18 +68,20 @@ pub struct Pos {pub x: f64, pub y: f64}
 ////////////////////////////////
 
 impl Agent {
-	pub fn new(agents: &Vec<Agent>) -> Agent {
-		for agent in agents {
-			if agent.body.size > 80.0 {
+	pub fn new(agents: &mut Vec<Agent>) -> Agent {
+		for parent in agents {
+			if parent.body.size > 80.0 {
 				// Spawn child agent
 
+				parent.body.remove(56.0); // shrink parent
+
 				let colour = Colour {
-					r: agent.body.colour.r, // TODO: random slight colour change
-					g: agent.body.colour.g,
-					b: agent.body.colour.b
+					r: parent.body.colour.r, // TODO: random slight colour change
+					g: parent.body.colour.g,
+					b: parent.body.colour.b
 				};
 
-				let neurons_hidden = agent.brain.neurons_hidden.clone();
+				let neurons_hidden = parent.brain.neurons_hidden.clone();
 
 				return Agent::with(neurons_hidden, colour, 56.0)
 			}
@@ -206,6 +208,17 @@ impl Neuron {
 }
 
 ////////////////////////////////
+
+impl Body {
+	fn remove(&mut self, removal: f64) {
+		let new_size = (self.size*self.size - removal*removal).sqrt();
+
+		self.pos.x += (self.size - new_size)/2.0;
+		self.pos.y += (self.size - new_size)/2.0;
+
+		self.size = new_size;
+	}
+}
 
 impl Colour {
 	fn new() -> Colour {

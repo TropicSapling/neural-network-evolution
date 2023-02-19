@@ -89,7 +89,7 @@ fn closely_overlapping(pos: Pos, pos2: Pos, size: f64, size2: f64) -> bool {
 }
 
 fn eat(eater: &mut Body, size_l: f64, size_s: f64) {
-	let new_size_l = (size_l.powf(2.0) + size_s.powf(2.0)).sqrt();
+	let new_size_l = (size_l*size_l + size_s*size_s).sqrt();
 
 	eater.pos.x -= (new_size_l - size_l)/2.0;
 	eater.pos.y -= (new_size_l - size_l)/2.0;
