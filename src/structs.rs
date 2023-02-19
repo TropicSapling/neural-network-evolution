@@ -83,7 +83,7 @@ impl Agent {
 		}
 
 		// Spawn new random agent
-		Agent::with(vec![Neuron::new(3)], Colour::new(), rand_range(64.0..96.0))
+		Agent::with(vec![Neuron::new(3)], Colour::new(), rand_range(48.0..96.0))
 	}
 
 	fn with(neurons_hidden: Vec<Neuron>, colour: Colour, size: f64) -> Agent {
