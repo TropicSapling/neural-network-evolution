@@ -111,6 +111,8 @@ impl Agent {
 	}
 
 	fn mutate(mut self) -> Self {
+		let recv_neuron_count = self.brain.neurons_hidden.len() + OUTS;
+
 		// Slightly mutate colours
 		self.body.colour.r.add_bounded_max(rand_range(-16..16), 256);
 		self.body.colour.g.add_bounded_max(rand_range(-16..16), 256);
@@ -123,6 +125,18 @@ impl Agent {
 			for conn in &mut neuron.next_conn {
 				conn.weight += rand_range(-1..=1);
 			}
+
+			if rand_range(0..=1) == 1 {
+				neuron.next_conn.push(ForwardConn {
+					dest_index: rand_range(0..recv_neuron_count),
+					speed: 0,
+					weight: 1
+				})
+			}
+		}
+
+		if rand_range(0..=1) == 1 {
+			self.brain.neurons_hidden.push(Neuron::new(recv_neuron_count))
 		}
 
 		self
