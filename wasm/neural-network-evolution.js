@@ -46,6 +46,8 @@ function addHeapObject(obj) {
     heap[idx] = obj;
     return idx;
 }
+
+function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
 /**
 */
 export function start() {
@@ -57,8 +59,6 @@ export function start() {
 export function run() {
     wasm.run();
 }
-
-function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
 
 function handleError(f, args) {
     try {

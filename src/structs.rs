@@ -13,7 +13,7 @@ pub struct Agent {
 
 /// neurons_in  : [x, y, size] normalised to [0, 1]
 /// neurons_out : [moving, turning]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Brain {
 	pub neurons_in     : [Neuron; 3],
 	pub neurons_hidden : Vec<Neuron>,
@@ -75,24 +75,24 @@ impl Agent {
 
 				parent.body.remove(56.0); // shrink parent
 
-				let colour         = parent.body.colour.clone();
-				let neurons_hidden = parent.brain.neurons_hidden.clone();
+				let colour = parent.body.colour.clone();
+				let brain  = parent.brain.clone();
 
-				return Agent::with(neurons_hidden, colour, 56.0).mutate()
+				return Agent::with(brain, colour, 56.0).mutate()
 			}
 		}
 
 		// Spawn new random agent
-		Agent::with(vec![Neuron::new(3)], Colour::new(), rand_range(48.0..96.0))
+		Agent::with(Brain {
+			neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
+			neurons_hidden : vec![                Neuron::new(3)                ],
+			neurons_out    :     [Neuron::new(3),                 Neuron::new(3)]
+		}, Colour::new(), rand_range(48.0..96.0))
 	}
 
-	fn with(neurons_hidden: Vec<Neuron>, colour: Colour, size: f64) -> Agent {
+	fn with(brain: Brain, colour: Colour, size: f64) -> Agent {
 		Agent {
-			brain: Brain {
-				neurons_in      : [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
-				neurons_hidden,
-				neurons_out     : [Neuron::new(3), Neuron::new(3)]
-			},
+			brain,
 
 			body: Body {
 				colour,
