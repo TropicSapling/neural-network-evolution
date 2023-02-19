@@ -143,20 +143,13 @@ impl Agent {
 		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
 
 		// Mutate brain
-		for neuron in &mut self.brain.neurons_hidden {
-			neuron.tick_drain.add_bounded(rand_range(-1..=1));
-			neuron.act_threshold.add_bounded(rand_range(-1..=1));
-			for conn in &mut neuron.next_conn {
-				conn.weight += rand_range(-1..=1);
-			}
 
-			if rand_range(0..=1) == 1 {
-				neuron.next_conn.push(ForwardConn {
-					dest_index: rand_range(0..recv_neuron_count),
-					speed: 0,
-					weight: 1
-				})
-			}
+		for neuron in &mut self.brain.neurons_in {
+			neuron.mutate(recv_neuron_count)
+		}
+
+		for neuron in &mut self.brain.neurons_hidden {
+			neuron.mutate(recv_neuron_count)
 		}
 
 		if rand_range(0..=1) == 1 {
@@ -251,6 +244,22 @@ impl Neuron {
 			act_threshold,
 
 			next_conn: vec![]
+		}
+	}
+
+	fn mutate(&mut self, recv_neuron_count: usize) {
+		self.tick_drain.add_bounded(rand_range(-1..=1));
+		self.act_threshold.add_bounded(rand_range(-1..=1));
+		for conn in &mut self.next_conn {
+			conn.weight += rand_range(-1..=1);
+		}
+
+		if rand_range(0..=1) == 1 {
+			self.next_conn.push(ForwardConn {
+				dest_index: rand_range(0..recv_neuron_count),
+				speed: 0,
+				weight: 1
+			})
 		}
 	}
 }
