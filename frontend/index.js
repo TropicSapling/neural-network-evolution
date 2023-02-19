@@ -7,6 +7,8 @@ const FPS = 60;
 let canvas;
 let loop;
 
+window.inverseSpawnRate = 64;
+
 window.stopAll = function stopAll() {
 	clearInterval(loop);
 }
@@ -32,5 +34,5 @@ window.draw_agent = function draw_agent(r, g, b, x, y, size) {
 init().then(() => {
 	console.log("Finished loading WebAssembly.");
 	console.log(`Running game at ${FPS} FPS.`);
-	loop = setInterval(run, 1000/FPS);
+	loop = setInterval(run, 1000/FPS, inverseSpawnRate);
 })

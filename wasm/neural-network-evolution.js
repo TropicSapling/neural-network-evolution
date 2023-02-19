@@ -55,9 +55,10 @@ export function start() {
 }
 
 /**
+* @param {number} inverse_spawn_rate
 */
-export function run() {
-    wasm.run();
+export function run(inverse_spawn_rate) {
+    wasm.run(inverse_spawn_rate);
 }
 
 function handleError(f, args) {

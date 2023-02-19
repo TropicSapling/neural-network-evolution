@@ -4,15 +4,16 @@
 */
 export function start(): void;
 /**
+* @param {number} inverse_spawn_rate
 */
-export function run(): void;
+export function run(inverse_spawn_rate: number): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly start: () => void;
-  readonly run: () => void;
+  readonly run: (a: number) => void;
   readonly main: (a: number, b: number) => number;
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __wbindgen_start: () => void;
