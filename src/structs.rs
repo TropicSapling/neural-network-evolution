@@ -55,7 +55,7 @@ pub struct Body {
 	pub turning : bool
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Colour {
 	pub r: usize,
 	pub g: usize,
@@ -75,15 +75,10 @@ impl Agent {
 
 				parent.body.remove(56.0); // shrink parent
 
-				let colour = Colour {
-					r: parent.body.colour.r, // TODO: random slight colour change
-					g: parent.body.colour.g,
-					b: parent.body.colour.b
-				};
-
+				let colour         = parent.body.colour.clone();
 				let neurons_hidden = parent.brain.neurons_hidden.clone();
 
-				return Agent::with(neurons_hidden, colour, 56.0)
+				return Agent::with(neurons_hidden, colour, 56.0).mutate()
 			}
 		}
 
@@ -111,6 +106,16 @@ impl Agent {
 
 			alive: true
 		}
+	}
+
+	fn mutate(mut self) -> Self {
+		self.body.colour.r.add_bounded_max(rand_range(-16..16), 256);
+		self.body.colour.g.add_bounded_max(rand_range(-16..16), 256);
+		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
+
+		// TODO: mutate brain
+
+		self
 	}
 }
 
@@ -168,11 +173,7 @@ impl Brain {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
-				if conn.weight < 0 {
-					recv_neuron.inhibit(-conn.weight as usize)
-				} else {
-					recv_neuron.excite(conn.weight as usize)
-				}
+				recv_neuron.excitation.add_bounded(conn.weight)
 			}
 		}
 	}
@@ -192,18 +193,6 @@ impl Neuron {
 				weight: 1
 			}]
 		}
-	}
-
-	fn inhibit(&mut self, amount: usize) {
-		if self.excitation > amount {
-			self.excitation -= amount
-		} else {
-			self.excitation = 0
-		}
-	}
-
-	fn excite(&mut self, amount: usize) {
-		self.excitation += amount
 	}
 }
 
