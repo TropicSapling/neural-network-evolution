@@ -20,7 +20,7 @@ pub struct Brain {
 	pub neurons_out    : [Neuron; 2]
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Neuron {
 	pub excitation: usize,
 	pub tick_drain: usize,
@@ -68,18 +68,39 @@ pub struct Pos {pub x: f64, pub y: f64}
 ////////////////////////////////
 
 impl Agent {
-	pub fn new() -> Agent {
+	pub fn new(agents: &Vec<Agent>) -> Agent {
+		for agent in agents {
+			if agent.body.size > 80.0 {
+				// Spawn child agent
+
+				let colour = Colour {
+					r: agent.body.colour.r, // TODO: random slight colour change
+					g: agent.body.colour.g,
+					b: agent.body.colour.b
+				};
+
+				let neurons_hidden = agent.brain.neurons_hidden.clone();
+
+				return Agent::with(neurons_hidden, colour, 56.0)
+			}
+		}
+
+		// Spawn new random agent
+		Agent::with(vec![Neuron::new(3)], Colour::new(), rand_range(64.0..96.0))
+	}
+
+	fn with(neurons_hidden: Vec<Neuron>, colour: Colour, size: f64) -> Agent {
 		Agent {
 			brain: Brain {
-				neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
-				neurons_hidden : vec![                Neuron::new(3)                ],
-				neurons_out    :     [Neuron::new(3),                 Neuron::new(3)]
+				neurons_in      : [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
+				neurons_hidden,
+				neurons_out     : [Neuron::new(3), Neuron::new(3)]
 			},
 
 			body: Body {
-				colour  : Colour::new(),
+				colour,
 				pos     : Pos::new(),
-				size    : rand_range(64.0..96.0),
+				size,
 				angle   : rand_range(0.0..360.0),
 
 				moving  : false,
