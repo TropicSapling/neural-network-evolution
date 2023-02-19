@@ -36,8 +36,13 @@ impl fmt::Debug for Neuron {
 	// Print neuron debug info in a concise way
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     	let mut s = String::from("Neuron->[");
-    	for conn in &self.next_conn {
-    		s += &format!("{}*#{}", conn.weight, conn.dest_index)
+
+    	let mut conn_iter = self.next_conn.iter().peekable();
+    	while let Some(conn) = conn_iter.next() {
+    		s += &format!("{}*#{}", conn.weight, conn.dest_index);
+    		if !conn_iter.peek().is_none() {
+    			s += ", "
+    		}
     	}
 
         write!(f, "{s}]")

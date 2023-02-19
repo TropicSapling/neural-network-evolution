@@ -36,7 +36,7 @@ pub unsafe fn run() {
 	// Randomly spawn new agents
 	if rand_range(0..64) == 42 {
 		AGENTS.push(Agent::new(&mut AGENTS));
-		console_log!("NEW NEURONAL NETWORK: {:#?}.", AGENTS[AGENTS.len() - 1].brain);
+		console_log!("NEW NEURAL NETWORK: {:#?}.", AGENTS[AGENTS.len() - 1].brain);
 		console_log!("");
 	}
 
