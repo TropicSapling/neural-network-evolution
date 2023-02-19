@@ -89,7 +89,7 @@ pub struct Pos {pub x: f64, pub y: f64}
 impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
 		for parent in agents {
-			if parent.body.size > 80.0 {
+			if parent.body.size > 80.0 && rand_range(0..4) == 2 {
 				// Spawn child agent
 
 				let child_size = 0.7*parent.body.size;
