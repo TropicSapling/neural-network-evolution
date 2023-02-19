@@ -30,7 +30,7 @@ pub unsafe fn start() {
 
 	console_log!("Spawned {:#?}.", AGENTS[0]);
 	console_log!("");
-	console_log!("Starting version 0.0.30");
+	console_log!("Starting version 0.0.31");
 }
 
 #[wasm_bindgen]

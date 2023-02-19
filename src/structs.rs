@@ -111,11 +111,19 @@ impl Agent {
 	}
 
 	fn mutate(mut self) -> Self {
+		// Slightly mutate colours
 		self.body.colour.r.add_bounded_max(rand_range(-16..16), 256);
 		self.body.colour.g.add_bounded_max(rand_range(-16..16), 256);
 		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
 
-		// TODO: mutate brain
+		// Mutate brain
+		for neuron in &mut self.brain.neurons_hidden {
+			neuron.tick_drain.add_bounded(rand_range(-1..=1));
+			neuron.act_threshold.add_bounded(rand_range(-1..=1));
+			for conn in &mut neuron.next_conn {
+				conn.weight += rand_range(-1..=1);
+			}
+		}
 
 		self
 	}
