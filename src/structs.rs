@@ -73,12 +73,14 @@ impl Agent {
 			if parent.body.size > 80.0 {
 				// Spawn child agent
 
-				parent.body.remove(0.7*parent.body.size); // shrink parent
+				let child_size = 0.7*parent.body.size;
+
+				parent.body.remove(child_size); // shrink parent
 
 				let colour = parent.body.colour.clone();
 				let brain  = parent.brain.clone();
 
-				return Agent::with(brain, colour, 0.7*parent.body.size).mutate()
+				return Agent::with(brain, colour, child_size).mutate()
 			}
 		}
 
