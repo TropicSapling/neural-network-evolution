@@ -19,7 +19,9 @@ pub struct Agent {
 pub struct Brain {
 	pub neurons_in     : [Neuron; 3],
 	pub neurons_hidden : Vec<Neuron>,
-	pub neurons_out    : [Neuron; 2]
+	pub neurons_out    : [Neuron; 2],
+
+	pub generation: usize // for debugging/display
 }
 
 #[derive(Clone)]
@@ -112,7 +114,8 @@ impl Agent {
 		Agent::with(Brain {
 			neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
 			neurons_hidden : vec![                Neuron::new(3)                ],
-			neurons_out    :     [Neuron::new(3),                 Neuron::new(3)]
+			neurons_out    :     [Neuron::new(3),                 Neuron::new(3)],
+			generation: 0
 		}, Colour::new(), rand_range(48.0..80.0))
 	}
 
@@ -143,6 +146,7 @@ impl Agent {
 		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
 
 		// Mutate brain
+		self.brain.generation += 1;
 
 		for neuron in &mut self.brain.neurons_in {
 			neuron.mutate(recv_neuron_count)
@@ -241,6 +245,13 @@ impl Neuron {
 	}
 
 	fn mutate(&mut self, recv_neuron_count: usize) {
+		if rand_range(0..=1) == 1 {
+			// De facto deactivate neuron (easier than removing)
+			self.tick_drain    = usize::MAX;
+			self.act_threshold = usize::MAX;
+			return
+		}
+
 		self.tick_drain.add_bounded(rand_range(-1..=1));
 		self.act_threshold.add_bounded(rand_range(-1..=1));
 		for conn in &mut self.next_conn {
