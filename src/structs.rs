@@ -107,7 +107,7 @@ impl Agent {
 		Agent::with(Brain {
 			neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
 			neurons_hidden : vec![                Neuron::new(3)                ],
-			neurons_out    :     [Neuron::new(3),                 Neuron::new(3)]
+			neurons_out    :     [Neuron::out(1),                 Neuron::out(1)]
 		}, Colour::new(), rand_range(48.0..80.0))
 	}
 
@@ -235,6 +235,17 @@ impl Neuron {
 				speed: 0,
 				weight: 1
 			}]
+		}
+	}
+
+	fn out(act_threshold: usize) -> Neuron {
+		Neuron {
+			excitation: 0,
+			tick_drain: 1,
+
+			act_threshold,
+
+			next_conn: vec![]
 		}
 	}
 }
