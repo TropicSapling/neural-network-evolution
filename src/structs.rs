@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::helpers::*;
 
 const OUTS: usize = 2;
@@ -20,7 +22,7 @@ pub struct Brain {
 	pub neurons_out    : [Neuron; 2]
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Neuron {
 	pub excitation: usize,
 	pub tick_drain: usize,
@@ -28,6 +30,17 @@ pub struct Neuron {
 	pub act_threshold: usize,
 
 	pub next_conn: Vec<ForwardConn>
+}
+
+impl fmt::Debug for Neuron {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    	let mut s = String::from("Neuron->[");
+    	for conn in &self.next_conn {
+    		s += &format!("{}*{}", conn.weight, conn.dest_index)
+    	}
+
+        write!(f, "{s}]")
+    }
 }
 
 #[derive(Clone, Debug)]
