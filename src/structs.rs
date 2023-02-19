@@ -149,11 +149,11 @@ impl Agent {
 		self.brain.generation += 1;
 
 		for neuron in &mut self.brain.neurons_in {
-			neuron.mutate(recv_neuron_count)
+			neuron.mutate(recv_neuron_count, true)
 		}
 
 		for neuron in &mut self.brain.neurons_hidden {
-			neuron.mutate(recv_neuron_count)
+			neuron.mutate(recv_neuron_count, false)
 		}
 
 		if rand_range(0..=1) == 1 {
@@ -161,7 +161,7 @@ impl Agent {
 		}
 
 		for neuron in &mut self.brain.neurons_out {
-			neuron.mutate(recv_neuron_count)
+			neuron.mutate(recv_neuron_count, true)
 		}
 
 		self
@@ -244,8 +244,8 @@ impl Neuron {
 		}
 	}
 
-	fn mutate(&mut self, recv_neuron_count: usize) {
-		if rand_range(0..=1) == 1 {
+	fn mutate(&mut self, recv_neuron_count: usize, inout: bool) {
+		if rand_range(0..=1) == 1 && !inout {
 			// De facto deactivate neuron (easier than removing)
 			self.tick_drain    = usize::MAX;
 			self.act_threshold = usize::MAX;
