@@ -34,5 +34,7 @@ window.draw_agent = function draw_agent(r, g, b, x, y, size) {
 init().then(() => {
 	console.log("Finished loading WebAssembly.");
 	console.log(`Running game at ${FPS} FPS.`);
-	loop = setInterval(run, 1000/FPS, inverseSpawnRate);
+	loop = setInterval(function() {
+		run(window.inverseSpawnRate)
+	}, 1000/FPS);
 })
