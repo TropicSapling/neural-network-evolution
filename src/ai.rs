@@ -38,7 +38,7 @@ fn get_nearest(agents: &Vec<Agent>, agent: &Agent) -> (f64, f64) {
 
 	for i in 0..agents.len() {
 		let distance = dist(agent.body.pos, agents[i].body.pos);
-		if distance < nearest.1 {
+		if distance != 0.0 && distance < nearest.1 {
 			nearest = (i, distance)
 		}
 	}
