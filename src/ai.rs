@@ -1,6 +1,6 @@
 use crate::{Agent, Pos, js::*, helpers::*};
 
-const MAX_DIST: f64 = 720_000.0;
+const MAX_DIST: f64 = 848.5281374238571;
 
 pub fn update_ai(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
@@ -49,5 +49,5 @@ fn get_nearest(agents: &Vec<Agent>, agent: &Agent) -> (f64, f64) {
 }
 
 fn dist(pos1: Pos, pos2: Pos) -> f64 {
-	(pos1.x - pos2.x).powf(2.0) + (pos1.y - pos2.y).powf(2.0)
+	((pos1.x - pos2.x).powf(2.0) + (pos1.y - pos2.y).powf(2.0)).sqrt()
 }
