@@ -58,9 +58,11 @@ pub struct ForwardConn {
 	pub weight: isize
 }
 
-// TODO:
+// TODO - STDP (Spike-Timing-Dependent Plasticity):
 // Strengthen/weaken connection weight if receiving neuron
 // activates shortly after/before connection fired.
+
+// TODO: make input neurons effectively ReLU by manipulating weights?
 
 ////////////////////////////////
 
@@ -170,11 +172,6 @@ impl Agent {
 
 impl Brain {
 	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
-		// Just for testing
-		self.neurons_in[0].excitation = rand_range(0..=1);
-		self.neurons_in[1].excitation = rand_range(0..=1);
-		self.neurons_in[2].excitation = rand_range(0..=1);
-
 		// Drain output neurons from previous excitation
 		for i in 0..OUTS {
 			let neuron = &mut self.neurons_out[i];
