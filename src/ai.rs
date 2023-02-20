@@ -22,10 +22,8 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		// Debug
 		if rand_range(0..2048) == 0 {
-			if input[0].next_conn.len() > 0 && input[1].next_conn.len() > 0 {
-				console_log!("dist={}", (nearest.1/720_000.0 * 5.0));
-				console_log!("size_diff={}", (body.size/nearest.0 * 5.0));
-			}
+			console_log!("dist={}", (nearest.1/720_000.0 * 5.0));
+			console_log!("size_diff={}", (body.size/nearest.0 * 5.0));
 		}
 
 		let output = agent.brain.update_neurons();
