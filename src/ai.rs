@@ -1,6 +1,7 @@
 use crate::{Agent, Pos, js::*, helpers::*};
 
 const MAX_DIST: f64 = 848.5281374238571;
+const MAX_DIFF: f64 = 18.75;
 
 pub fn update_ai(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
@@ -15,17 +16,17 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		(input[1].excitation, input[1].act_threshold) = (1, 1);
 
 		for conn in &mut input[0].next_conn {
-			conn.weight = (nearest.1/MAX_DIST * 10.0) as isize
+			conn.weight = (nearest.1/MAX_DIST * 20.0) as isize
 		}
 
 		for conn in &mut input[1].next_conn {
-			conn.weight = (body.size/nearest.0 * 5.0) as isize
+			conn.weight = (body.size/nearest.0/MAX_DIFF * 20.0) as isize
 		}
 
 		// Debug
 		if rand_range(0..256) == 0 {
 			console_log!("dist={}", (nearest.1/MAX_DIST * 10.0) as isize);
-			console_log!("size_diff={}", (body.size/nearest.0 * 5.0) as isize);
+			console_log!("size_diff={}", (body.size/nearest.0/18.75 * 20.0) as isize);
 		}
 
 		let output = agent.brain.update_neurons();
