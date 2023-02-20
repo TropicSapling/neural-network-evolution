@@ -2,8 +2,8 @@ use crate::structs::*;
 
 const GAME_SIZE: f64 = 600.0;
 
-const MOV_SPEED: f64 = 2.0;
-const ROT_SPEED: f64 = 0.02;
+const MOV_SPEED: f64 = 1.0;
+const ROT_SPEED: f64 = 0.05;
 
 pub fn update_game(agents: &mut Vec<Agent>) {
 	for agent in &mut *agents {
