@@ -1,5 +1,7 @@
 use crate::{Agent, Pos, js::*, helpers::*};
 
+const MAX_DIST: f64 = 720_000.0;
+
 pub fn update_ai(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
 		let nearest = get_nearest(agents, &agents[i]);
@@ -13,7 +15,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		(input[1].excitation, input[1].act_threshold) = (1, 1);
 
 		for conn in &mut input[0].next_conn {
-			conn.weight = (nearest.1/720_000.0 * 5.0) as isize
+			conn.weight = (nearest.1/MAX_DIST * 5.0) as isize
 		}
 
 		for conn in &mut input[1].next_conn {
@@ -22,7 +24,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		// Debug
 		if rand_range(0..256) == 0 {
-			console_log!("dist={}", (nearest.1/720_000.0 * 5.0));
+			console_log!("dist={}", (nearest.1/MAX_DIST * 5.0));
 			console_log!("size_diff={}", (body.size/nearest.0 * 5.0));
 		}
 
@@ -34,7 +36,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 }
 
 fn get_nearest(agents: &Vec<Agent>, agent: &Agent) -> (f64, f64) {
-	let mut nearest = (0, f64::MAX);
+	let mut nearest = (0, MAX_DIST);
 
 	for i in 0..agents.len() {
 		let distance = dist(agent.body.pos, agents[i].body.pos);
