@@ -3,6 +3,8 @@ use crate::{Agent, Pos, js::*, helpers::*};
 const MAX_DIST: f64 = 848.5281374238571;
 const MAX_DIFF: f64 = 18.75;
 
+// TODO: normalize everything around some resolution (i.e. 20 or 100), or make all f64?
+
 pub fn update_ai(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
 		let nearest = get_nearest(agents, &agents[i]);

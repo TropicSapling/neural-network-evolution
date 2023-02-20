@@ -13,6 +13,15 @@ window.stopAll = function stopAll() {
 	clearInterval(loop);
 }
 
+window.runAtFPS = function runAtFPS(fps) {
+	stopAll();
+	
+	console.log(`Running game at ${fps} FPS.`);
+	loop = setInterval(function() {
+		run(window.inverseSpawnRate)
+	}, 1000/fps);
+}
+
 window.onload = function init() {
 	canvas = document.getElementById("game").getContext("2d");
 }
