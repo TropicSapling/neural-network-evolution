@@ -14,6 +14,7 @@ pub struct Agent {
 ////////////////////////////////
 
 /// neurons_in  : [x, y, size] normalised to [0, 1]
+/// neurons_in  : [is_near, is_smaller] (binary alt.)
 /// neurons_out : [moving, turning]
 #[derive(Clone, Debug)]
 pub struct Brain {
