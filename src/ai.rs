@@ -38,8 +38,14 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		let output = agent.brain.update_neurons();
 
-		body.moving  = output[0].excitation >= output[0].act_threshold;
-		body.turning = output[1].excitation >= output[1].act_threshold;
+		body.moving = output[0].excitation >= output[0].act_threshold;
+
+		body.turn = 0;
+		if output[1].excitation >= output[1].act_threshold {
+			for conn in &output[1].next_conn {
+				body.turn += conn.weight;
+			}
+		}
 	}
 }
 

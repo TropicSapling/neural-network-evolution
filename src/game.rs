@@ -3,7 +3,7 @@ use crate::structs::*;
 const GAME_SIZE: f64 = 600.0;
 
 const MOV_SPEED: f64 = 1.0;
-const ROT_SPEED: f64 = 0.05;
+const ROT_SPEED: f64 = 0.01;
 
 pub fn update_game(agents: &mut Vec<Agent>) {
 	for agent in &mut *agents {
@@ -15,10 +15,8 @@ pub fn update_game(agents: &mut Vec<Agent>) {
 }
 
 fn mov(body: &mut Body) {
-	if body.turning {
-		body.angle += ROT_SPEED;
-		body.angle %= 360.0;
-	}
+	body.angle += ROT_SPEED * (body.turn as f64);
+	body.angle %= 360.0;
 
 	if body.moving {
 		body.pos.x += MOV_SPEED * body.angle.cos();

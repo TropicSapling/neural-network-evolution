@@ -77,7 +77,7 @@ pub struct Body {
 	pub angle : f64,
 
 	pub moving  : bool,
-	pub turning : bool
+	pub turn    : isize
 }
 
 #[derive(Clone, Debug)]
@@ -135,7 +135,7 @@ impl Agent {
 				angle   : rand_range(0.0..360.0),
 
 				moving  : false,
-				turning : false
+				turn    : 0
 			},
 
 			alive: true,
