@@ -95,7 +95,7 @@ pub struct Pos {pub x: f64, pub y: f64}
 impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
 		for parent in agents {
-			if parent.body.size > 80.0 && rand_range(0..parent.inv_split_freq) == 0 {
+			if parent.body.size > 64.0 && rand_range(0..parent.inv_split_freq) == 0 {
 				// Spawn child agent
 
 				let child_size = 0.7*parent.body.size;
@@ -121,7 +121,7 @@ impl Agent {
 			neurons_hidden : vec![Neuron::new(4), Neuron::new(4)],
 			neurons_out    :     [Neuron::new(4), Neuron::new(4)],
 			generation: 0
-		}, Colour::new(), rand_range(48.0..80.0), 4)
+		}, Colour::new(), rand_range(32.0..96.0), 4)
 	}
 
 	fn with(brain: Brain, colour: Colour, size: f64, freq: usize) -> Agent {
@@ -274,7 +274,7 @@ impl Neuron {
 			self.next_conn.push(ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: 0
+				weight: rand_range(-1..=1)
 			})
 		}
 
