@@ -158,7 +158,7 @@ impl Agent {
 			} else {
 				self.inv_split_freq /= 2
 			}
-		} else {
+		} else if self.inv_split_freq > 1 {
 			self.inv_split_freq.add_bounded(rand_range(-1..=1))
 		}
 

@@ -28,7 +28,7 @@ pub unsafe fn start() {
 		AGENTS.push(Agent::new(&mut AGENTS));
 	}
 
-	console_log!("Starting version 0.0.59");
+	console_log!("Starting version 0.0.60");
 }
 
 #[wasm_bindgen]
