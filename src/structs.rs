@@ -153,7 +153,7 @@ impl Agent {
 
 		// Mutate inverse split frequency
 		if rand_range(0..self.inv_split_freq) == 0 {
-			if rand_range(0..=1) == 0 {
+			if rand_range(0..=1) == 0 || self.inv_split_freq <= 1 {
 				self.inv_split_freq *= 2
 			} else {
 				self.inv_split_freq /= 2
