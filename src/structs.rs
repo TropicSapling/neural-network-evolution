@@ -162,6 +162,11 @@ impl Agent {
 			self.brain.neurons_hidden.push(Neuron::new(recv_neuron_count))
 		}
 
+		if rand_range(0..=1) == 1 {
+			let last = self.brain.neurons_hidden.len() - 1;
+			self.brain.neurons_hidden[last].next_conn.pop();
+		}
+
 		for neuron in &mut self.brain.neurons_out {
 			neuron.mutate(recv_neuron_count)
 		}
@@ -236,7 +241,7 @@ impl Neuron {
 			next_conn: vec![ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: 1
+				weight: 0
 			}]
 		}
 	}
@@ -253,7 +258,7 @@ impl Neuron {
 			self.next_conn.push(ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: 1
+				weight: 0
 			})
 		}
 
