@@ -38,6 +38,8 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		let output = agent.brain.update_neurons();
 
+		// TODO: nerf movement & rotation, maybe consume more energy for faster?
+
 		// Movement output
 		body.mov = 0;
 		if output[0].excitation >= output[0].act_threshold {

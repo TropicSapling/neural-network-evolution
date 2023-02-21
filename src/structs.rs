@@ -56,7 +56,7 @@ impl fmt::Debug for Neuron {
 #[derive(Clone, Debug)]
 pub struct ForwardConn {
 	pub dest_index: usize,
-	pub speed: usize,
+	pub speed: usize, // currently unused
 	pub weight: isize
 }
 
@@ -179,8 +179,7 @@ impl Agent {
 		}
 
 		if rand_range(0..=1) == 1 {
-			let last = self.brain.neurons_hidden.len() - 1;
-			self.brain.neurons_hidden[last].next_conn.pop();
+			self.brain.neurons_hidden.last_mut().unwrap().next_conn.pop();
 		}
 
 		for neuron in &mut self.brain.neurons_out {
@@ -257,24 +256,28 @@ impl Neuron {
 			next_conn: vec![ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: rand_range(-1..=1)
+				weight: [-1, 1][rand_range(0..=1)]
 			}]
 		}
 	}
 
 	fn mutate(&mut self, recv_neuron_count: usize) {
+		// Mutate neuron properties & outgoing connections
 		self.tick_drain.add_bounded(rand_range(-1..=1));
 		self.act_threshold.add_bounded(rand_range(-1..=1));
 		for conn in &mut self.next_conn {
 			conn.weight += rand_range(-1..=1);
 		}
 
+		// Remove effectively dead connections
+		self.next_conn.retain(|conn| conn.weight != 0);
+
 		// Sometimes add new outgoing connection
 		if rand_range(0..=1) == 1 {
 			self.next_conn.push(ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: rand_range(-1..=1)
+				weight: [-1, 1][rand_range(0..=1)]
 			})
 		}
 
