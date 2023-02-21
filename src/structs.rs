@@ -95,7 +95,6 @@ pub struct Pos {pub x: f64, pub y: f64}
 impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
 		for parent in agents {
-			// TODO: custom, evolutionary decided birth rate!
 			if parent.body.size > 80.0 && rand_range(0..parent.inv_split_freq) == 0 {
 				// Spawn child agent
 
@@ -108,7 +107,7 @@ impl Agent {
 
 				let child = Agent::with(brain, colour, child_size).mutate();
 
-				console_log!("NEW CHILD NEURAL NETWORK: {:#?}", child.brain);
+				console_log!("split={}: {:#?}", child.inv_split_freq, child.brain);
 				console_log!("");
 
 				return child
