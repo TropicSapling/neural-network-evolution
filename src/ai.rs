@@ -23,11 +23,11 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		(input[1].excitation, input[1].act_threshold) = (1, 1);
 
 		for conn in &mut input[0].next_conn {
-			conn.weight = (nearest.1/MAX_DIST * 20.0) as isize
+			conn.weight = (1.0 + nearest.1/MAX_DIST * 20.0) as isize
 		}
 
 		for conn in &mut input[1].next_conn {
-			conn.weight = (body.size/nearest.0/MAX_DIFF * 20.0) as isize
+			conn.weight = (1.0 + body.size/nearest.0/MAX_DIFF * 20.0) as isize
 		}
 
 		// Debug
