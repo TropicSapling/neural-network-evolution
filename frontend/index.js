@@ -7,7 +7,7 @@ const FPS = 60;
 let canvas;
 let loop;
 
-window.inverseSpawnRate = 32;
+window.inverseSpawnRate = 16;
 
 window.stopAll = function stopAll() {
 	clearInterval(loop);
