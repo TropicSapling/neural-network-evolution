@@ -76,8 +76,8 @@ pub struct Body {
 	pub size  : f64,
 	pub angle : f64,
 
-	pub moving  : bool,
-	pub turn    : isize
+	pub mov: isize,
+	pub rot: isize
 }
 
 #[derive(Clone, Debug)]
@@ -130,12 +130,12 @@ impl Agent {
 
 			body: Body {
 				colour,
-				pos     : Pos::new(),
+				pos: Pos::new(),
 				size,
-				angle   : rand_range(0.0..360.0),
+				angle: rand_range(0.0..360.0),
 
-				moving  : false,
-				turn    : 0
+				mov: 0,
+				rot: 0
 			},
 
 			alive: true,
