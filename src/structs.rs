@@ -139,7 +139,7 @@ impl Agent {
 
 			alive: true,
 
-			inv_split_freq: 16
+			inv_split_freq: 1
 		}
 	}
 
