@@ -152,7 +152,15 @@ impl Agent {
 		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
 
 		// Mutate inverse split frequency
-		self.inv_split_freq.add_bounded(rand_range(-1..=1));
+		if rand_range(0..self.inv_split_freq) == 0 {
+			if rand_range(0..=1) == 0 {
+				self.inv_split_freq *= 2
+			} else {
+				self.inv_split_freq /= 2
+			}
+		} else {
+			self.inv_split_freq.add_bounded(rand_range(-1..=1))
+		}
 
 		// Mutate brain
 		self.brain.generation += 1;
