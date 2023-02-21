@@ -38,19 +38,23 @@ pub struct Neuron {
 
 impl fmt::Debug for Neuron {
 	// Print neuron debug info in a concise way
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    	let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		if self.next_conn.len() > 0 {
+			let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
 
-    	let mut conn_iter = self.next_conn.iter().peekable();
-    	while let Some(conn) = conn_iter.next() {
-    		s += &format!("(*{})->#{}", conn.weight, conn.dest_index);
-    		if !conn_iter.peek().is_none() {
-    			s += ", "
-    		}
-    	}
+			let mut conn_iter = self.next_conn.iter().peekable();
+			while let Some(conn) = conn_iter.next() {
+				s += &format!("(*{})->#{}", conn.weight, conn.dest_index);
+				if !conn_iter.peek().is_none() {
+					s += ", "
+				}
+			}
 
-        write!(f, "{s}}}")
-    }
+			write!(f, "{s}}}")
+		} else {
+			write!(f, "Neuron {{INACTIVE}}")
+		}
+	}
 }
 
 #[derive(Clone, Debug)]
