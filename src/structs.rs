@@ -257,7 +257,7 @@ impl Neuron {
 			next_conn: vec![ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: 0
+				weight: rand_range(-1..=1)
 			}]
 		}
 	}
