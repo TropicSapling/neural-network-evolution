@@ -19,7 +19,7 @@ pub struct Agent {
 /// neurons_out : [moving, turning]
 #[derive(Clone, Debug)]
 pub struct Brain {
-	pub neurons_in     : [Neuron; 3],
+	pub neurons_in     : [Neuron; 2],
 	pub neurons_hidden : Vec<Neuron>,
 	pub neurons_out    : [Neuron; 2],
 
@@ -116,9 +116,9 @@ impl Agent {
 
 		// Spawn new random agent
 		Agent::with(Brain {
-			neurons_in     :     [Neuron::new(3), Neuron::new(3), Neuron::new(3)],
-			neurons_hidden : vec![                Neuron::new(3)                ],
-			neurons_out    :     [Neuron::new(3),                 Neuron::new(3)],
+			neurons_in     :     [Neuron::new(3),                Neuron::new(3)],
+			neurons_hidden : vec![                Neuron::new(3)               ],
+			neurons_out    :     [Neuron::new(3),                Neuron::new(3)],
 			generation: 0
 		}, Colour::new(), rand_range(48.0..80.0))
 	}
