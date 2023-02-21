@@ -102,10 +102,11 @@ impl Agent {
 
 				parent.body.remove(child_size); // shrink parent
 
+				let freq   = parent.inv_split_freq;
 				let colour = parent.body.colour.clone();
 				let brain  = parent.brain.clone();
 
-				let child = Agent::with(brain, colour, child_size).mutate();
+				let child = Agent::with(brain, colour, child_size, freq).mutate();
 
 				console_log!("split={}: {:#?}", child.inv_split_freq, child.brain);
 				console_log!("");
@@ -120,10 +121,10 @@ impl Agent {
 			neurons_hidden : vec![                Neuron::new(3)               ],
 			neurons_out    :     [Neuron::new(3),                Neuron::new(3)],
 			generation: 0
-		}, Colour::new(), rand_range(48.0..80.0))
+		}, Colour::new(), rand_range(48.0..80.0), 2)
 	}
 
-	fn with(brain: Brain, colour: Colour, size: f64) -> Agent {
+	fn with(brain: Brain, colour: Colour, size: f64, freq: usize) -> Agent {
 		Agent {
 			brain,
 
@@ -139,7 +140,7 @@ impl Agent {
 
 			alive: true,
 
-			inv_split_freq: 2
+			inv_split_freq: freq
 		}
 	}
 
