@@ -8,7 +8,9 @@ const OUTS: usize = 2;
 pub struct Agent {
 	pub brain : Brain,
 	pub body  : Body,
-	pub alive : bool
+	pub alive : bool,
+
+	inv_split_freq: usize
 }
 
 ////////////////////////////////
@@ -93,7 +95,8 @@ pub struct Pos {pub x: f64, pub y: f64}
 impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
 		for parent in agents {
-			if parent.body.size > 80.0 && rand_range(0..4) == 2 {
+			// TODO: custom, evolutionary decided birth rate!
+			if parent.body.size > 80.0 && rand_range(0..parent.inv_split_freq) == 0 {
 				// Spawn child agent
 
 				let child_size = 0.7*parent.body.size;
@@ -135,7 +138,9 @@ impl Agent {
 				turning : false
 			},
 
-			alive: true
+			alive: true,
+
+			inv_split_freq: 16
 		}
 	}
 
@@ -146,6 +151,9 @@ impl Agent {
 		self.body.colour.r.add_bounded_max(rand_range(-16..16), 256);
 		self.body.colour.g.add_bounded_max(rand_range(-16..16), 256);
 		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
+
+		// Mutate inverse split frequency
+		self.inv_split_freq.add_bounded(rand_range(-1..=1));
 
 		// Mutate brain
 		self.brain.generation += 1;
