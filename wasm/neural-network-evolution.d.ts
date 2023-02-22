@@ -7,6 +7,11 @@ export function start(): void;
 * @param {number} inverse_spawn_rate
 */
 export function run(inverse_spawn_rate: number): void;
+/**
+* @param {number} x
+* @param {number} y
+*/
+export function print_agent_at(x: number, y: number): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -14,6 +19,7 @@ export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly start: () => void;
   readonly run: (a: number) => void;
+  readonly print_agent_at: (a: number, b: number) => void;
   readonly main: (a: number, b: number) => number;
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __wbindgen_start: () => void;

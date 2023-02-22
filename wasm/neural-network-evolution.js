@@ -61,6 +61,14 @@ export function run(inverse_spawn_rate) {
     wasm.run(inverse_spawn_rate);
 }
 
+/**
+* @param {number} x
+* @param {number} y
+*/
+export function print_agent_at(x, y) {
+    wasm.print_agent_at(x, y);
+}
+
 function handleError(f, args) {
     try {
         return f.apply(this, args);

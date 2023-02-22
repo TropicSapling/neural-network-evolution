@@ -1,6 +1,6 @@
 "use strict";
 
-import init, {run} from '../wasm/neural-network-evolution.js'
+import init, {run, print_agent_at} from '../wasm/neural-network-evolution.js'
 
 const FPS = 60;
 
@@ -23,7 +23,17 @@ window.runAtFPS = function runAtFPS(fps) {
 }
 
 window.onload = function init() {
-	canvas = document.getElementById("game").getContext("2d");
+	let canvasElem = document.querySelector("canvas");
+
+	// Print agent debug info on click
+	canvasElem.addEventListener("mousedown", function(e) {
+		const rect   = canvasElem.getBoundingClientRect();
+		const [x, y] = [event.clientX - rect.left, event.clientY - rect.top];
+
+		print_agent_at(x, y)
+	});
+
+	canvas = canvasElem.getContext("2d");
 }
 
 window.draw_bg = function draw_bg() {

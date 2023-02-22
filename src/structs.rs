@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::{helpers::*, js::*};
+use crate::helpers::*;
 
 const OUTS: usize = 2;
 
@@ -110,12 +110,7 @@ impl Agent {
 				let colour = parent.body.colour.clone();
 				let brain  = parent.brain.clone();
 
-				let child = Agent::with(brain, colour, child_size, freq).mutate();
-
-				console_log!("split={}: {:#?}", child.inv_split_freq, child.brain);
-				console_log!("");
-
-				return child
+				return Agent::with(brain, colour, child_size, freq).mutate()
 			}
 		}
 

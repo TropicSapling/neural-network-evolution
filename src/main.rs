@@ -15,6 +15,7 @@ use {helpers::*, js::*, structs::*};
 use game::update_game;
 use ai::update_ai;
 
+// To my knowledge, this unfortunately has to be a mutable static to work with WASM
 static mut AGENTS: Vec<Agent> = vec![];
 
 fn main() {
@@ -28,7 +29,7 @@ pub unsafe fn start() {
 		AGENTS.push(Agent::new(&mut AGENTS));
 	}
 
-	console_log!("Starting version 0.0.69");
+	console_log!("Starting version 0.0.70");
 }
 
 #[wasm_bindgen]
@@ -41,6 +42,17 @@ pub unsafe fn run(inverse_spawn_rate: usize) {
 	update_ai(&mut AGENTS);
 	update_game(&mut AGENTS);
 	draw_frame(&AGENTS);
+}
+
+#[wasm_bindgen]
+pub unsafe fn print_agent_at(x: f64, y: f64) {
+	for agent in &AGENTS {
+		let (pos, size) = (agent.body.pos, agent.body.size);
+
+		if (pos.x..pos.x+size).contains(&x) && (pos.y..pos.y+size).contains(&y) {
+			console_log!("Neural Network @ ({x}, {y}): {:#?}", agent.brain)
+		}
+	}
 }
 
 fn draw_frame(agents: &Vec<Agent>) {
