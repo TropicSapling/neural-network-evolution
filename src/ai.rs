@@ -57,7 +57,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		}
 
 		// Movement & rotation costs energy
-		shrink_by(body, 0.9995_f64.powf((body.mov + body.rot) as f64))
+		shrink_by(body, 0.9995_f64.powf((body.mov + body.rot).abs() as f64))
 	}
 }
 
