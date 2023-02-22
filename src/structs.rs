@@ -16,7 +16,7 @@ pub struct Agent {
 ////////////////////////////////
 
 /// neurons_in  : [dist, size_diff] normalised to [0, 1]
-/// neurons_out : [moving, turning]
+/// neurons_out : [mov, rot]
 #[derive(Clone, Debug)]
 pub struct Brain {
 	pub neurons_in     : [Neuron; 2],

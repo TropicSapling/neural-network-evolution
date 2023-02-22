@@ -1,4 +1,4 @@
-use crate::{Agent, Pos};
+use crate::structs::*;
 //use crate::{Agent, Pos, js::*, helpers::*};
 
 const MAX_DIST: f64 = 848.5281374238571;
@@ -55,6 +55,9 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 				body.rot += conn.weight;
 			}
 		}
+
+		// Movement & rotation costs energy
+		shrink_by(body, 0.9995_f64.powf((body.mov + body.rot) as f64))
 	}
 }
 
@@ -73,4 +76,12 @@ fn get_nearest(agents: &Vec<Agent>, agent: &Agent) -> (f64, f64) {
 
 fn dist(pos1: Pos, pos2: Pos) -> f64 {
 	((pos1.x - pos2.x).powf(2.0) + (pos1.y - pos2.y).powf(2.0)).sqrt()
+}
+
+fn shrink_by(body: &mut Body, factor: f64) {
+	let size0 = body.size;
+
+	body.size  *= factor;
+	body.pos.x += (size0 - body.size)/2.0;
+	body.pos.y += (size0 - body.size)/2.0;
 }
