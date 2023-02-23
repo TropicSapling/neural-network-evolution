@@ -276,12 +276,15 @@ impl Neuron {
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
 			if Neuron::should_mutate_now() {
-				let mut_type = ["MutThis", "NewConn", "NewNeuron"][rand_range(0..3)];
+				let mut_this = rand_range(0..=1) == 0;
+				let add_conn = rand_range(0..=1) == 0;
 
-				match mut_type {
-					"MutThis"   => conn.weight      += [-1, 1][rand_range(0..=1)],
-					"NewConn"   => new_conn_count   += 1,
-					_           => new_neuron_count += 1
+				if mut_this {
+					conn.weight += [-1, 1][rand_range(0..=1)]
+				} else if add_conn {
+					new_conn_count += 1
+				} else {
+					new_neuron_count += 1
 				}
 			}
 		}
