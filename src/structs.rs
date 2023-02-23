@@ -33,14 +33,19 @@ pub struct Neuron {
 
 	pub act_threshold: usize,
 
-	pub next_conn: Vec<ForwardConn>
+	pub next_conn: Vec<ForwardConn>,
+
+	reachable: bool
 }
 
-// TODO: only print relevant neurons & connections (reachable ones)
 impl fmt::Debug for Neuron {
 	// Print neuron debug info in a concise way
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		if self.next_conn.len() > 0 {
+		if !self.reachable {
+			write!(f, "Neuron {{UNREACHABLE}}")
+		} else if self.next_conn.len() < 1 {
+			write!(f, "Neuron {{INACTIVE}}")
+		} else {
 			let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
 
 			let mut conn_iter = self.next_conn.iter().peekable();
@@ -52,8 +57,6 @@ impl fmt::Debug for Neuron {
 			}
 
 			write!(f, "{s}}}")
-		} else {
-			write!(f, "Neuron {{INACTIVE}}")
 		}
 	}
 }
@@ -200,6 +203,7 @@ impl Brain {
 		}
 
 		for i in 0..self.neurons_in.len() {
+			self.neurons_in[i].reachable = true; // input neurons always reachable
 			self.update_neuron(i, true)
 		}
 
@@ -223,7 +227,7 @@ impl Brain {
 		};
 
 		// If neuron activated...
-		if neuron.excitation >= neuron.act_threshold {
+		if neuron.reachable && neuron.excitation >= neuron.act_threshold {
 			// ... prepare all connections for activation
 			let mut activations = vec![];
 			for conn in &neuron.next_conn {
@@ -238,7 +242,8 @@ impl Brain {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
-				recv_neuron.excitation.add_bounded(conn.weight)
+				recv_neuron.excitation.add_bounded(conn.weight);
+				recv_neuron.reachable = true;
 			}
 		}
 	}
@@ -256,7 +261,9 @@ impl Neuron {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
 				weight: [-1, 1][rand_range(0..=1)]
-			}]
+			}],
+
+			reachable: false
 		}
 	}
 
@@ -300,6 +307,9 @@ impl Neuron {
 
 		// Remove effectively dead connections
 		self.next_conn.retain(|conn| conn.weight != 0);
+
+		// Assume not reachable until proven otherwise
+		self.reachable = false;
 
 		new_neuron_count
 	}
