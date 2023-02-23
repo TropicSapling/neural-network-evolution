@@ -36,9 +36,10 @@ pub struct Neuron {
 	pub next_conn: Vec<ForwardConn>
 }
 
+// TODO: only print relevant neurons & connections (reachable ones)
 impl fmt::Debug for Neuron {
 	// Print neuron debug info in a concise way
-	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		if self.next_conn.len() > 0 {
 			let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
 
@@ -67,8 +68,6 @@ pub struct ForwardConn {
 // TODO - STDP (Spike-Timing-Dependent Plasticity):
 // Strengthen/weaken connection weight if receiving neuron
 // activates shortly after/before connection fired.
-
-// TODO: make input neurons effectively ReLU by manipulating weights?
 
 ////////////////////////////////
 
@@ -162,28 +161,29 @@ impl Agent {
 			self.inv_split_freq.add_bounded(rand_range(-1..=1))
 		}
 
-		// Mutate brain
-		self.brain.generation += 1;
+		let mut new_neuron_count = 0;
 
+		// Mutate input neurons
 		for neuron in &mut self.brain.neurons_in {
-			neuron.mutate(recv_neuron_count)
+			new_neuron_count += neuron.mutate(recv_neuron_count)
 		}
 
+		// Mutate hidden neurons
 		for neuron in &mut self.brain.neurons_hidden {
-			neuron.mutate(recv_neuron_count)
+			new_neuron_count += neuron.mutate(recv_neuron_count)
 		}
 
-		if rand_range(0..=1) == 1 {
+		// Mutate output neurons
+		for neuron in &mut self.brain.neurons_out {
+			new_neuron_count += neuron.mutate(recv_neuron_count)
+		}
+
+		// Add new hidden neurons
+		for _ in 0..new_neuron_count {
 			self.brain.neurons_hidden.push(Neuron::new(recv_neuron_count))
 		}
 
-		if rand_range(0..=1) == 1 {
-			self.brain.neurons_hidden.last_mut().unwrap().next_conn.pop();
-		}
-
-		for neuron in &mut self.brain.neurons_out {
-			neuron.mutate(recv_neuron_count)
-		}
+		self.brain.generation += 1;
 
 		self
 	}
@@ -260,19 +260,34 @@ impl Neuron {
 		}
 	}
 
-	fn mutate(&mut self, recv_neuron_count: usize) {
-		// Mutate neuron properties & outgoing connections
-		self.tick_drain.add_bounded(rand_range(-1..=1));
-		self.act_threshold.add_bounded(rand_range(-1..=1));
+	// 50/50 if mutation or not
+	fn should_mutate_now() -> bool {rand_range(0..=1) == 1}
+
+	fn mutate(&mut self, recv_neuron_count: usize) -> usize {
+		let mut new_neuron_count = 0;
+		let mut new_conn_count   = 0;
+
+		// Mutate neuron properties
+		if Neuron::should_mutate_now()
+			{self.tick_drain.add_bounded([-1, 1][rand_range(0..=1)])}
+		if Neuron::should_mutate_now()
+			{self.act_threshold.add_bounded([-1, 1][rand_range(0..=1)])}
+
+		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
-			conn.weight += rand_range(-1..=1);
+			if Neuron::should_mutate_now() {
+				let mut_type = ["MutThis", "NewConn", "NewNeuron"][rand_range(0..3)];
+
+				match mut_type {
+					"MutThis"   => conn.weight      += [-1, 1][rand_range(0..=1)],
+					"NewConn"   => new_conn_count   += 1,
+					_           => new_neuron_count += 1
+				}
+			}
 		}
 
-		// Remove effectively dead connections
-		self.next_conn.retain(|conn| conn.weight != 0);
-
-		// Sometimes add new outgoing connection
-		if rand_range(0..=1) == 1 {
+		// Add new outgoing connections
+		for _ in 0..new_conn_count {
 			self.next_conn.push(ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
@@ -280,10 +295,10 @@ impl Neuron {
 			})
 		}
 
-		// Sometimes remove outgoing connection, may render neuron inactive
-		if rand_range(0..=1) == 1 {
-			self.next_conn.pop();
-		}
+		// Remove effectively dead connections
+		self.next_conn.retain(|conn| conn.weight != 0);
+
+		new_neuron_count
 	}
 }
 
