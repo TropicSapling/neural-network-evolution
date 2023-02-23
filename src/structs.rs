@@ -208,12 +208,14 @@ impl Brain {
 		}
 
 		for i in 0..self.neurons_hidden.len() {
-			self.update_neuron(i, false);
+			if self.neurons_hidden[i].reachable {
+				self.update_neuron(i, false);
 
-			// Drain neuron
-			let neuron = &mut self.neurons_hidden[i];
-			if neuron.excitation >= neuron.tick_drain {
-				neuron.excitation -= neuron.tick_drain
+				// Drain neuron
+				let neuron = &mut self.neurons_hidden[i];
+				if neuron.excitation >= neuron.tick_drain {
+					neuron.excitation -= neuron.tick_drain
+				}
 			}
 		}
 
@@ -227,7 +229,7 @@ impl Brain {
 		};
 
 		// If neuron activated...
-		if neuron.reachable && neuron.excitation >= neuron.act_threshold {
+		if neuron.excitation >= neuron.act_threshold {
 			// ... prepare all connections for activation
 			let mut activations = vec![];
 			for conn in &neuron.next_conn {
