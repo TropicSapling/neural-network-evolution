@@ -18,9 +18,7 @@ use ai::update_ai;
 // To my knowledge, this unfortunately has to be a mutable static to work with WASM
 static mut AGENTS: Vec<Agent> = vec![];
 
-fn main() {
-	println!("Don't run it this way; compile to wasm!")
-}
+////////////////////////////////
 
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
@@ -53,6 +51,12 @@ pub unsafe fn print_agent_at(x: f64, y: f64) {
 			console_log!("Neural Network @ ({x}, {y}): {:#?}", agent.brain)
 		}
 	}
+}
+
+////////////////////////////////
+
+fn main() {
+	println!("Don't run it this way; compile to wasm!")
 }
 
 fn draw_frame(agents: &Vec<Agent>) {
