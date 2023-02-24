@@ -42,7 +42,11 @@ impl fmt::Debug for Neuron {
 	// Print neuron debug info in a concise way
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		if !self.reachable {
-			write!(f, "Neuron {{UNREACHABLE}}")
+			if self.next_conn.len() < 1 {
+				write!(f, "Neuron {{UNREACHABLE & INACTIVE}}")
+			} else {
+				write!(f, "Neuron {{UNREACHABLE}}")
+			}
 		} else if self.next_conn.len() < 1 {
 			write!(f, "Neuron {{INACTIVE}}")
 		} else {
