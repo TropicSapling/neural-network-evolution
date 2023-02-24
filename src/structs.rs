@@ -13,7 +13,10 @@ pub struct Agent {
 	inv_split_freq: usize
 }
 
-////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
 
 /// neurons_in  : [dist, size_diff] normalised to [0, 1]
 /// neurons_out : [mov, rot]
@@ -38,33 +41,6 @@ pub struct Neuron {
 	reachable: bool
 }
 
-impl fmt::Debug for Neuron {
-	// Print neuron debug info in a concise way
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		if !self.reachable {
-			if self.next_conn.len() < 1 {
-				write!(f, "Neuron {{UNREACHABLE & INACTIVE}}")
-			} else {
-				write!(f, "Neuron {{UNREACHABLE}}")
-			}
-		} else if self.next_conn.len() < 1 {
-			write!(f, "Neuron {{INACTIVE}}")
-		} else {
-			let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
-
-			let mut conn_iter = self.next_conn.iter().peekable();
-			while let Some(conn) = conn_iter.next() {
-				s += &format!("(*{})->#{}", conn.weight, conn.dest_index);
-				if !conn_iter.peek().is_none() {
-					s += ", "
-				}
-			}
-
-			write!(f, "{s}}}")
-		}
-	}
-}
-
 #[derive(Clone, Debug)]
 pub struct ForwardConn {
 	pub dest_index: usize,
@@ -76,7 +52,10 @@ pub struct ForwardConn {
 // Strengthen/weaken connection weight if receiving neuron
 // activates shortly after/before connection fired.
 
-////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
 
 #[derive(Debug)]
 pub struct Body {
@@ -100,7 +79,10 @@ pub struct Colour {
 #[derive(Clone, Copy, Debug)]
 pub struct Pos {pub x: f64, pub y: f64}
 
-////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
 
 impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
@@ -195,6 +177,11 @@ impl Agent {
 		self
 	}
 }
+
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
 
 impl Brain {
 	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
@@ -321,7 +308,37 @@ impl Neuron {
 	}
 }
 
-////////////////////////////////
+impl fmt::Debug for Neuron {
+	// Print neuron debug info in a concise way
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		if !self.reachable {
+			if self.next_conn.len() < 1 {
+				write!(f, "Neuron {{UNREACHABLE & INACTIVE}}")
+			} else {
+				write!(f, "Neuron {{UNREACHABLE}}")
+			}
+		} else if self.next_conn.len() < 1 {
+			write!(f, "Neuron {{INACTIVE}}")
+		} else {
+			let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
+
+			let mut conn_iter = self.next_conn.iter().peekable();
+			while let Some(conn) = conn_iter.next() {
+				s += &format!("(*{})->#{}", conn.weight, conn.dest_index);
+				if !conn_iter.peek().is_none() {
+					s += ", "
+				}
+			}
+
+			write!(f, "{s}}}")
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
 
 impl Body {
 	fn remove(&mut self, removal: f64) {
