@@ -102,14 +102,20 @@ impl Agent {
 			}
 		}
 
-		// Spawn new random agent
+		let spawn_size = if rand_range(0..8) == 0 {
+			rand_range(32.0..80.0) // agent
+		} else {
+			rand_range(8.0..32.0) // food
+		};
+
+		// Spawn new random agent/food
 		Agent::with(Brain {
 			neurons_in     :     [Neuron::new(6), Neuron::new(6)],
 			neurons_hidden : vec![Neuron::new(6), Neuron::new(6),
 			                      Neuron::new(6), Neuron::new(6)],
 			neurons_out    :     [Neuron::new(6), Neuron::new(6)],
 			generation: 0
-		}, Colour::new(), rand_range(8.0..80.0), 16)
+		}, Colour::new(), spawn_size, 16)
 	}
 
 	fn with(brain: Brain, colour: Colour, size: f64, freq: usize) -> Agent {
