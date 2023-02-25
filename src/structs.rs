@@ -187,7 +187,7 @@ impl Brain {
 	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
 		// Drain output neurons from previous excitation
 		for i in 0..OUTS {
-			self.neurons_out[i].excitation -= self.neurons_out[i].tick_drain
+			self.neurons_out[i].drain()
 		}
 
 		for i in 0..self.neurons_in.len() {
@@ -198,9 +198,7 @@ impl Brain {
 		for i in 0..self.neurons_hidden.len() {
 			if self.neurons_hidden[i].reachable {
 				self.update_neuron(i, false);
-
-				// Drain neuron
-				self.neurons_hidden[i].excitation -= self.neurons_hidden[i].tick_drain
+				self.neurons_out[i].drain()
 			}
 		}
 
@@ -242,7 +240,7 @@ impl Neuron {
 			excitation: 0.0,
 			tick_drain: 1.0,
 
-			act_threshold: 1.0,
+			act_threshold: 0.5,
 
 			next_conn: vec![ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
@@ -299,6 +297,21 @@ impl Neuron {
 		self.reachable = false;
 
 		new_neuron_count
+	}
+
+	fn drain(&mut self) {
+		// Drain excitation towards a neutral state of 0
+		if self.excitation > 0.0 {
+			self.excitation -= self.tick_drain.abs();
+			if self.excitation < 0.0 {
+				self.excitation = 0.0
+			}
+		} else {
+			self.excitation += self.tick_drain.abs();
+			if self.excitation > 0.0 {
+				self.excitation = 0.0
+			}
+		}
 	}
 }
 
