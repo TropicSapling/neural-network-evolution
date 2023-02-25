@@ -102,7 +102,7 @@ impl Agent {
 			}
 		}
 
-		let spawn_size = if rand_range(0..8) == 0 {
+		let spawn_size = if rand_range(0..6) == 0 {
 			rand_range(32.0..80.0) // agent
 		} else {
 			rand_range(8.0..32.0) // food
