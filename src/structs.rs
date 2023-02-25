@@ -198,7 +198,7 @@ impl Brain {
 		for i in 0..self.neurons_hidden.len() {
 			if self.neurons_hidden[i].reachable {
 				self.update_neuron(i, false);
-				self.neurons_out[i].drain()
+				self.neurons_hidden[i].drain()
 			}
 		}
 
