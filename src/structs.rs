@@ -115,7 +115,7 @@ impl Agent {
 			                      Neuron::new(6), Neuron::new(6)],
 			neurons_out    :     [Neuron::new(6), Neuron::new(6)],
 			generation: 0
-		}, Colour::new(), spawn_size, 16)
+		}, Colour::new(spawn_size < 32.0), spawn_size, 16)
 	}
 
 	fn with(brain: Brain, colour: Colour, size: f64, freq: usize) -> Agent {
@@ -366,7 +366,11 @@ impl Body {
 }
 
 impl Colour {
-	fn new() -> Colour {
+	fn new(food: bool) -> Colour {
+		if food {
+			return Colour {r: 0, g: 255, b: 0}
+		}
+
 		Colour {r: rand_range(0..256), g: rand_range(0..256), b: rand_range(0..256)}
 	}
 }
