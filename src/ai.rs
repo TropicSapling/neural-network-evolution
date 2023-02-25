@@ -1,6 +1,6 @@
 use crate::structs::*;
 
-const MAX_DIST: f64 = 720_000.0;
+const MAX_DIST: f64 = 259_200_000_000.0;
 const MAX_DIFF: f64 = 150.0;
 
 pub fn update_ai(agents: &mut Vec<Agent>) {
@@ -69,8 +69,8 @@ fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64) {
 }
 
 fn inv_dist(pos1: Pos, pos2: Pos) -> f64 {
-	(600.0 - (pos1.x - pos2.x).abs()).powf(2.0) +
-	(600.0 - (pos1.y - pos2.y).abs()).powf(2.0)
+	(600.0 - (pos1.x - pos2.x).abs()).powf(4.0) +
+	(600.0 - (pos1.y - pos2.y).abs()).powf(4.0)
 }
 
 fn shrink_by(body: &mut Body, factor: f64) {
