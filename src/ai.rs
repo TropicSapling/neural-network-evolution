@@ -1,10 +1,7 @@
 use crate::structs::*;
-//use crate::{Agent, Pos, js::*, helpers::*};
 
 const MAX_DIST: f64 = 848.5281374238571;
 const MAX_DIFF: f64 = 150.0;
-
-// TODO: normalize everything around some resolution (i.e. 20 or 100), or make all f64?
 
 pub fn update_ai(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
@@ -19,29 +16,24 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		let input = &mut agent.brain.neurons_in;
 
 		// Input neurons always fire
-		(input[0].excitation, input[0].act_threshold) = (1, 1);
-		(input[1].excitation, input[1].act_threshold) = (1, 1);
+		(input[0].excitation, input[0].act_threshold) = (1.0, 1.0);
+		(input[1].excitation, input[1].act_threshold) = (1.0, 1.0);
 
+		// Distance to nearest as first input
 		for conn in &mut input[0].next_conn {
-			conn.weight = (1.0 + nearest.1/MAX_DIST * 20.0) as isize
+			conn.weight = 1.0 - nearest.0/MAX_DIST
 		}
 
+		// Relative size of nearest as second input
 		for conn in &mut input[1].next_conn {
-			conn.weight = (1.0 + body.size/nearest.0/MAX_DIFF * 20.0) as isize
+			conn.weight = body.size/nearest.1/MAX_DIFF // maybe should tweak?
 		}
 
-		// Debug
-		/*if rand_range(0..256) == 0 {
-			console_log!("dist={}", (nearest.1/MAX_DIST * 10.0) as isize);
-			console_log!("size_diff={}", (body.size/nearest.0/18.75 * 20.0) as isize);
-		}*/
-
+		// Input -> ... -> Output
 		let output = agent.brain.update_neurons();
 
-		// TODO: nerf movement & rotation, maybe consume more energy for faster?
-
 		// Movement output
-		body.mov = 0;
+		body.mov = 0.0;
 		if output[0].excitation >= output[0].act_threshold {
 			for conn in &output[0].next_conn {
 				body.mov += conn.weight;
@@ -49,7 +41,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		}
 
 		// Rotation output
-		body.rot = 0;
+		body.rot = 0.0;
 		if output[1].excitation >= output[1].act_threshold {
 			for conn in &output[1].next_conn {
 				body.rot += conn.weight;
@@ -57,21 +49,21 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		}
 
 		// Movement & rotation costs energy
-		shrink_by(body, 0.9995_f64.powf((body.mov + body.rot).abs() as f64))
+		shrink_by(body, 0.9995_f64.powf(body.mov + body.rot).abs())
 	}
 }
 
 fn get_nearest(agents: &Vec<Agent>, agent: &Agent) -> (f64, f64) {
-	let mut nearest = (0, MAX_DIST);
+	let mut nearest = (MAX_DIST, 0);
 
 	for i in 0..agents.len() {
 		let distance = dist(agent.body.pos, agents[i].body.pos);
-		if distance != 0.0 && distance < nearest.1 {
-			nearest = (i, distance)
+		if distance != 0.0 && distance < nearest.0 {
+			nearest = (distance, i)
 		}
 	}
 
-	(agents[nearest.0].body.size, nearest.1)
+	(nearest.0, agents[nearest.1].body.size)
 }
 
 fn dist(pos1: Pos, pos2: Pos) -> f64 {

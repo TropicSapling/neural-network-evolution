@@ -31,10 +31,10 @@ pub struct Brain {
 
 #[derive(Clone)]
 pub struct Neuron {
-	pub excitation: usize,
-	pub tick_drain: usize,
+	pub excitation: f64,
+	pub tick_drain: f64,
 
-	pub act_threshold: usize,
+	pub act_threshold: f64,
 
 	pub next_conn: Vec<ForwardConn>,
 
@@ -45,7 +45,7 @@ pub struct Neuron {
 pub struct ForwardConn {
 	pub dest_index: usize,
 	pub speed: usize, // currently unused
-	pub weight: isize
+	pub weight: f64
 }
 
 // TODO - STDP (Spike-Timing-Dependent Plasticity):
@@ -65,8 +65,8 @@ pub struct Body {
 	pub size  : f64,
 	pub angle : f64,
 
-	pub mov: isize,
-	pub rot: isize
+	pub mov: f64,
+	pub rot: f64
 }
 
 #[derive(Clone, Debug)]
@@ -121,8 +121,8 @@ impl Agent {
 				size,
 				angle: rand_range(0.0..360.0),
 
-				mov: 0,
-				rot: 0
+				mov: 0.0,
+				rot: 0.0
 			},
 
 			alive: true,
@@ -187,10 +187,7 @@ impl Brain {
 	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
 		// Drain output neurons from previous excitation
 		for i in 0..OUTS {
-			let neuron = &mut self.neurons_out[i];
-			if neuron.excitation >= neuron.tick_drain {
-				neuron.excitation -= neuron.tick_drain
-			}
+			self.neurons_out[i].excitation -= self.neurons_out[i].tick_drain
 		}
 
 		for i in 0..self.neurons_in.len() {
@@ -203,10 +200,7 @@ impl Brain {
 				self.update_neuron(i, false);
 
 				// Drain neuron
-				let neuron = &mut self.neurons_hidden[i];
-				if neuron.excitation >= neuron.tick_drain {
-					neuron.excitation -= neuron.tick_drain
-				}
+				self.neurons_hidden[i].excitation -= self.neurons_hidden[i].tick_drain
 			}
 		}
 
@@ -224,7 +218,7 @@ impl Brain {
 			// ... prepare all connections for activation
 			let mut activations = vec![];
 			for conn in &neuron.next_conn {
-				activations.push(conn.clone());
+				activations.push(conn.clone())
 			}
 
 			// ... and then activate the connections
@@ -235,8 +229,8 @@ impl Brain {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
-				recv_neuron.excitation.add_bounded(conn.weight);
-				recv_neuron.reachable = true;
+				recv_neuron.excitation += conn.weight;
+				recv_neuron.reachable   = true
 			}
 		}
 	}
@@ -245,15 +239,15 @@ impl Brain {
 impl Neuron {
 	fn new(recv_neuron_count: usize) -> Neuron {
 		Neuron {
-			excitation: 0,
-			tick_drain: 1,
+			excitation: 0.0,
+			tick_drain: 1.0,
 
-			act_threshold: 1,
+			act_threshold: 1.0,
 
 			next_conn: vec![ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: [-1, 1][rand_range(0..=1)]
+				weight: [-1.0, 1.0][rand_range(0..=1)]
 			}],
 
 			reachable: false
@@ -268,10 +262,10 @@ impl Neuron {
 		let mut new_conn_count   = 0;
 
 		// Mutate neuron properties
-		if Neuron::should_mutate_now()
-			{self.tick_drain.add_bounded([-1, 1][rand_range(0..=1)])}
-		if Neuron::should_mutate_now()
-			{self.act_threshold.add_bounded([-1, 1][rand_range(0..=1)])}
+		if Neuron::should_mutate_now() {
+			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
+		if Neuron::should_mutate_now() {
+			self.act_threshold += [-1.0, 1.0][rand_range(0..=1)]}
 
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
@@ -280,7 +274,7 @@ impl Neuron {
 				let add_conn = rand_range(0..=1) == 0;
 
 				if mut_this {
-					conn.weight += [-1, 1][rand_range(0..=1)]
+					conn.weight += [-1.0, 1.0][rand_range(0..=1)]
 				} else if add_conn {
 					new_conn_count += 1
 				} else {
@@ -294,12 +288,12 @@ impl Neuron {
 			self.next_conn.push(ForwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
-				weight: [-1, 1][rand_range(0..=1)]
+				weight: [-1.0, 1.0][rand_range(0..=1)]
 			})
 		}
 
 		// Remove effectively dead connections
-		self.next_conn.retain(|conn| conn.weight != 0);
+		self.next_conn.retain(|conn| (conn.weight*10.0).round() != 0.0);
 
 		// Assume not reachable until proven otherwise
 		self.reachable = false;
