@@ -16,8 +16,8 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		let input = &mut agent.brain.neurons_in;
 
 		// Input neurons always fire
-		(input[0].excitation, input[0].act_threshold) = (1.0, 1.0);
-		(input[1].excitation, input[1].act_threshold) = (1.0, 1.0);
+		(input[0].excitation, input[0].act_threshold) = (0.0, 0.0);
+		(input[1].excitation, input[1].act_threshold) = (0.0, 0.0);
 
 		// Distance to nearest as first input
 		for conn in &mut input[0].next_conn {
