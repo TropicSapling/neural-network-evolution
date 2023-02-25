@@ -1,7 +1,6 @@
 use crate::structs::*;
 
 const MAX_DIST: f64 = 259_200_000_000.0;
-const MAX_DIFF: f64 = 150.0;
 
 pub fn update_ai(agents: &mut Vec<Agent>) {
 	for i in 0..agents.len() {
@@ -9,7 +8,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 			continue // for performance reasons, small agents are just stationary food
 		}
 
-		let nearest = get_nearest(agents, i);
+		let (near_inv_dist, near_size) = get_nearest(agents, i);
 
 		let agent = &mut agents[i];
 		let body  = &mut agent.body;
@@ -21,12 +20,16 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		// Distance to nearest as first input
 		for conn in &mut input[0].next_conn {
-			conn.weight = nearest.0/MAX_DIST
+			conn.weight = near_inv_dist/MAX_DIST
 		}
 
 		// Relative size of nearest as second input
 		for conn in &mut input[1].next_conn {
-			conn.weight = body.size/nearest.1/MAX_DIFF // maybe should tweak?
+			conn.weight = if body.size > near_size*1.1 {
+				1.0
+			} else if near_size > body.size*1.1 {
+				-1.0
+			} else {0.0}
 		}
 
 		// Input -> ... -> Output
