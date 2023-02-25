@@ -104,9 +104,10 @@ impl Agent {
 
 		// Spawn new random agent
 		Agent::with(Brain {
-			neurons_in     :     [Neuron::new(4), Neuron::new(4)],
-			neurons_hidden : vec![Neuron::new(4), Neuron::new(4)],
-			neurons_out    :     [Neuron::new(4), Neuron::new(4)],
+			neurons_in     :     [Neuron::new(6), Neuron::new(6)],
+			neurons_hidden : vec![Neuron::new(6), Neuron::new(6),
+			                      Neuron::new(6), Neuron::new(6)],
+			neurons_out    :     [Neuron::new(6), Neuron::new(6)],
 			generation: 0
 		}, Colour::new(), rand_range(8.0..80.0), 16)
 	}
