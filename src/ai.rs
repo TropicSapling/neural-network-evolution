@@ -9,7 +9,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 			continue // for performance reasons, small agents are just stationary food
 		}
 
-		let nearest = get_nearest(agents, &agents[i]);
+		let nearest = get_nearest(agents, i);
 
 		let agent = &mut agents[i];
 		let body  = &mut agent.body;
@@ -21,7 +21,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		// Distance to nearest as first input
 		for conn in &mut input[0].next_conn {
-			conn.weight = 1.0 - nearest.0/MAX_DIST
+			conn.weight = nearest.0/MAX_DIST
 		}
 
 		// Relative size of nearest as second input
@@ -53,21 +53,24 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 	}
 }
 
-fn get_nearest(agents: &Vec<Agent>, agent: &Agent) -> (f64, f64) {
-	let mut nearest = (MAX_DIST, 0);
+fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64) {
+	let mut nearest = (0.0, 0);
 
-	for i in 0..agents.len() {
-		let distance = dist(agent.body.pos, agents[i].body.pos);
-		if distance != 0.0 && distance < nearest.0 {
-			nearest = (distance, i)
+	for j in 0..agents.len() {
+		if i == j {continue}
+
+		let inv_distance = inv_dist(agents[i].body.pos, agents[j].body.pos);
+		if inv_distance > nearest.0 {
+			nearest = (inv_distance, j)
 		}
 	}
 
 	(nearest.0, agents[nearest.1].body.size)
 }
 
-fn dist(pos1: Pos, pos2: Pos) -> f64 {
-	(pos1.x - pos2.x).powf(2.0) + (pos1.y - pos2.y).powf(2.0)
+fn inv_dist(pos1: Pos, pos2: Pos) -> f64 {
+	(600.0 - (pos1.x - pos2.x).abs()).powf(2.0) +
+	(600.0 - (pos1.y - pos2.y).abs()).powf(2.0)
 }
 
 fn shrink_by(body: &mut Body, factor: f64) {
