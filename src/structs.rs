@@ -86,8 +86,12 @@ pub struct Pos {pub x: f64, pub y: f64}
 
 impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
+		// TODO: consider instead spawning children of all-time high scorers
 		for parent in agents {
-			if parent.body.size > 80.0 && rand_range(0..parent.inv_split_freq) == 0 {
+			let div        = 1.0 + (parent.body.size - 60.0)/20.0;
+			let inv_chance = parent.inv_split_freq / (div as usize);
+
+			if parent.body.size > 60.0 && rand_range(0..inv_chance) == 0 {
 				// Spawn child agent
 
 				let child_size = 0.7*parent.body.size;
