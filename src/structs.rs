@@ -149,7 +149,7 @@ impl Agent {
 	}
 
 	fn mutate(mut self) -> Self {
-		let mut recv_neuron_count = self.brain.neurons_hidden.len() + OUTS;
+		let mut recv_neurons = self.brain.neurons_hidden.len() + OUTS;
 
 		// Slightly mutate colours
 		self.body.colour.r.add_bounded_max(rand_range(-16..16), 256);
@@ -167,41 +167,32 @@ impl Agent {
 			self.inv_split_freq.add_bounded(rand_range(-1..=1))
 		}
 
-		let mut new_neuron_count = 0;
-		let mut new_conn_count   = 0;
+		let mut new_neurons = 0;
+		let mut new_conns   = 0;
 
 		// Mutate input neurons
 		for neuron in &mut self.brain.neurons_in {
-			let ret = neuron.mutate();
-
-			new_neuron_count += ret.0;
-			new_conn_count   += ret.1;
+			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
 		}
 
 		// Mutate hidden neurons
 		for neuron in &mut self.brain.neurons_hidden {
-			let ret = neuron.mutate();
-
-			new_neuron_count += ret.0;
-			new_conn_count   += ret.1;
+			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
 		}
 
 		// Mutate output neurons
 		for neuron in &mut self.brain.neurons_out {
-			let ret = neuron.mutate();
-
-			new_neuron_count += ret.0;
-			new_conn_count   += ret.1;
+			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
 		}
 
 		// Add new hidden neurons
-		for _ in 0..new_neuron_count {
-			self.brain.neurons_hidden.push(Neuron::new(recv_neuron_count));
-			recv_neuron_count += 1
+		for _ in 0..new_neurons {
+			self.brain.neurons_hidden.push(Neuron::new(recv_neurons));
+			recv_neurons += 1
 		}
 
 		// Add new outgoing connections
-		for _ in 0..new_conn_count {
+		for _ in 0..new_conns {
 			let inps = self.brain.neurons_in.len();
 			let hids = self.brain.neurons_hidden.len();
 			let rand = rand_range(0..inps+hids+OUTS);
@@ -214,11 +205,7 @@ impl Agent {
 				&mut self.brain.neurons_out[rand-inps-hids]
 			};
 
-			neuron.next_conn.push(OutwardConn {
-				dest_index: rand_range(0..recv_neuron_count),
-				speed: 0,
-				weight: [-1.0, 1.0][rand_range(0..=1)]
-			})
+			neuron.next_conn.push(OutwardConn::new(recv_neurons))
 		}
 
 		self.brain.generation += 1;
@@ -291,11 +278,7 @@ impl Neuron {
 
 			act_threshold: 0.5,
 
-			next_conn: vec![OutwardConn {
-				dest_index: rand_range(0..recv_neuron_count),
-				speed: 0,
-				weight: [-1.0, 1.0][rand_range(0..=1)]
-			}],
+			next_conn: vec![OutwardConn::new(recv_neuron_count)],
 
 			reachable: false
 		}
@@ -306,10 +289,11 @@ impl Neuron {
 	// 50/50 if expansion or shrinking
 	fn should_expand_now() -> bool {rand_range(0..2) == 0}
 
-	fn mutate(&mut self) -> (usize, usize) {
-		let mut new_neuron_count = 0;
-		let mut new_conn_count   = 0;
-
+	fn mutate(&mut self,
+		new_neuron_count  : &mut usize,
+		new_conn_count    : &mut usize,
+		recv_neuron_count :      usize
+	) {
 		// Mutate neuron properties
 		if Neuron::should_mutate_now() {
 			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
@@ -327,8 +311,8 @@ impl Neuron {
 						// Sometimes expand weight or other stuff
 						match rand_range(0..3) {
 							0 => Neuron::expand_or_shrink(&mut conn.weight, 1.0),
-							1 => new_conn_count += 1,
-							_ => new_neuron_count += 1
+							1 => *new_conn_count += 1,
+							_ => *new_neuron_count += 1
 						}
 					} else {
 						// Sometimes shrink weight (which can effectively remove)
@@ -344,7 +328,11 @@ impl Neuron {
 		// Assume not reachable until proven otherwise
 		self.reachable = false;
 
-		(new_neuron_count, new_conn_count)
+		// If this neuron is inactive, can be recycled
+		if self.next_conn.len() < 1 && *new_neuron_count > 0 {
+			*new_neuron_count -= 1;
+			self.next_conn.push(OutwardConn::new(recv_neuron_count))
+		}
 	}
 
 	fn drain(&mut self) {
@@ -363,6 +351,16 @@ impl Neuron {
 			if *state > 0.0 {
 				*state = 0.0
 			}
+		}
+	}
+}
+
+impl OutwardConn {
+	fn new(recv_neuron_count: usize) -> OutwardConn {
+		OutwardConn {
+			dest_index: rand_range(0..recv_neuron_count),
+			speed: 0,
+			weight: [-1.0, 1.0][rand_range(0..=1)]
 		}
 	}
 }
