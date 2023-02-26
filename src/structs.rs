@@ -92,7 +92,7 @@ impl Agent {
 				let div        = 1.0 + (parent.body.size - 60.0)/20.0;
 				let inv_chance = parent.inv_split_freq / (div as usize);
 
-				if rand_range(0..inv_chance) == 0 {
+				if rand_range(0..=inv_chance) == 0 {
 					// Spawn child agent
 
 					let child_size = 0.7*parent.body.size;
