@@ -414,7 +414,7 @@ impl fmt::Debug for Neuron {
 			write!(f, "Neuron {{INACTIVE}}")
 		} else {
 			let (is_at, act_at) = (self.excitation, self.act_threshold);
-			let mut s = format!("Neuron {{IS@{} | ACT@{} | ", is_at, act_at);
+			let mut s = format!("Neuron {{IS@{:.1} | ACT@{:.1} | ", is_at, act_at);
 
 			let mut conn_iter = self.next_conn.iter().peekable();
 			while let Some(conn) = conn_iter.next() {
