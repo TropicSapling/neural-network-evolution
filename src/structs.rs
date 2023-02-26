@@ -413,7 +413,8 @@ impl fmt::Debug for Neuron {
 		} else if self.next_conn.len() < 1 {
 			write!(f, "Neuron {{INACTIVE}}")
 		} else {
-			let mut s = format!("Neuron {{ACT@{} | ", self.act_threshold);
+			let (is_at, act_at) = (self.excitation, self.act_threshold);
+			let mut s = format!("Neuron {{IS@{} | ACT@{} | ", is_at, act_at);
 
 			let mut conn_iter = self.next_conn.iter().peekable();
 			while let Some(conn) = conn_iter.next() {
