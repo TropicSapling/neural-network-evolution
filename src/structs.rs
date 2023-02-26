@@ -19,7 +19,7 @@ pub struct Agent {
 
 /// neurons_in  : [dist, size_diff, angle_to_near] normalised to [-1, 1]
 /// neurons_out : [mov, rot]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Brain {
 	pub neurons_in     : [Neuron; 3],
 	pub neurons_hidden : Vec<Neuron>,
@@ -364,6 +364,39 @@ impl Neuron {
 				*state = 0.0
 			}
 		}
+	}
+}
+
+impl fmt::Debug for Brain {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		let mut s = String::from("Brain {\n");
+
+		s += "\tneurons_in: [\n";
+		for neuron in &self.neurons_in {
+			s += &format!("{neuron:#?}\n")
+		}
+
+		let (mut unreachables, mut inactives) = (0, 0);
+
+		s += "],\n\n\tneurons_hidden: [\n";
+		for neuron in &self.neurons_hidden {
+			if neuron.reachable {
+				s += &format!("{neuron:#?}\n")
+			} else {
+				unreachables += 1;
+				if neuron.next_conn.len() < 1 {
+					inactives += 1
+				}
+			}
+		}
+		s += &format!("\n\tUNREACHABLES: {unreachables}, INACTIVES: {inactives}\n");
+
+		s += "],\n\n\tneurons_out: [\n";
+		for neuron in &self.neurons_out {
+			s += &format!("{neuron:#?}\n")
+		}
+
+		write!(f, "{s}],\n\ngeneration: {},\n}}", self.generation)
 	}
 }
 
