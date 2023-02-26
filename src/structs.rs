@@ -97,7 +97,9 @@ impl Agent {
 			new_agent = new_agent.mutate()
 		}
 
-		new_agent.mutate()
+		new_agent.brain.generation = 0;
+
+		new_agent
 	}
 
 	pub fn maybe_split(agents: &mut Vec<Agent>) -> Option<Agent> {
