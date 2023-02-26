@@ -84,7 +84,23 @@ pub struct Pos {pub x: f64, pub y: f64}
 
 
 impl Agent {
-	pub fn new(agents: &mut Vec<Agent>) -> Agent {
+	pub fn new() -> Agent {
+		let mut new_agent = Agent::with(Brain {
+			neurons_in     :     [Neuron::new(8), Neuron::new(8), Neuron::new(8)],
+			neurons_hidden : vec![Neuron::new(8), Neuron::new(8), Neuron::new(8),
+			                      Neuron::new(8), Neuron::new(8), Neuron::new(8)],
+			neurons_out    :     [Neuron::new(8),                 Neuron::new(8)],
+			generation: 0
+		}, Colour::new(), rand_range(48.0..64.0), 256);
+
+		for _ in 0..rand_range(0..8) {
+			new_agent = new_agent.mutate()
+		}
+
+		new_agent.mutate()
+	}
+
+	pub fn maybe_split(agents: &mut Vec<Agent>) -> Option<Agent> {
 		// TODO: consider instead spawning children of all-time high scorers
 		for parent in agents {
 			if parent.body.size > 64.0 {
@@ -102,26 +118,12 @@ impl Agent {
 					let colour = parent.body.colour.clone();
 					let brain  = parent.brain.clone();
 
-					return Agent::with(brain, colour, child_size, freq).mutate()
+					return Some(Agent::with(brain, colour, child_size, freq).mutate())
 				}
 			}
 		}
 
-		// Spawn new random agent
-
-		let mut new_agent = Agent::with(Brain {
-			neurons_in     :     [Neuron::new(8), Neuron::new(8), Neuron::new(8)],
-			neurons_hidden : vec![Neuron::new(8), Neuron::new(8), Neuron::new(8),
-			                      Neuron::new(8), Neuron::new(8), Neuron::new(8)],
-			neurons_out    :     [Neuron::new(8),                 Neuron::new(8)],
-			generation: 0
-		}, Colour::new(), rand_range(48.0..64.0), 4);
-
-		for _ in 0..rand_range(0..8) {
-			new_agent = new_agent.mutate()
-		}
-
-		new_agent.mutate()
+		None
 	}
 
 	fn with(brain: Brain, colour: Colour, size: f64, freq: usize) -> Agent {
