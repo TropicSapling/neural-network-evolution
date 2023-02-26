@@ -360,7 +360,7 @@ impl fmt::Debug for Neuron {
 			if self.next_conn.len() < 1 {
 				write!(f, "Neuron {{UNREACHABLE & INACTIVE}}")
 			} else {
-				write!(f, "Neuron {{UNREACHABLE}}")
+				write!(f, "Neuron {{UNREACHABLE, conns={}}}", self.next_conn.len())
 			}
 		} else if self.next_conn.len() < 1 {
 			write!(f, "Neuron {{INACTIVE}}")
