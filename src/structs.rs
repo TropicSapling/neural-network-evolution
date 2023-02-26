@@ -315,8 +315,8 @@ impl Neuron {
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
 			if Neuron::should_mutate_now() {
-				let mut_this = rand_range(0..=1) == 0;
-				let add_conn = rand_range(0..=1) == 0;
+				let mut_this = rand_range(0..3) == 0 || rand_range(0..3) == 0;
+				let add_conn = rand_range(0..2) == 0;
 
 				if mut_this {
 					conn.weight += [-1.0, 1.0][rand_range(0..=1)]
