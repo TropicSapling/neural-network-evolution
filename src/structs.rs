@@ -17,12 +17,13 @@ pub struct Agent {
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
+// TODO: impl angle_to_near input (direction to nearest minus self angle)
 
-/// neurons_in  : [dist, size_diff] normalised to [0, 1]
+/// neurons_in  : [dist, size_diff, angle_to_near] normalised to [-1, 1]
 /// neurons_out : [mov, rot]
 #[derive(Clone, Debug)]
 pub struct Brain {
-	pub neurons_in     : [Neuron; 2],
+	pub neurons_in     : [Neuron; 3],
 	pub neurons_hidden : Vec<Neuron>,
 	pub neurons_out    : [Neuron; 2],
 
@@ -116,10 +117,10 @@ impl Agent {
 
 		// Spawn new random agent/food
 		Agent::with(Brain {
-			neurons_in     :     [Neuron::new(6), Neuron::new(6)],
-			neurons_hidden : vec![Neuron::new(6), Neuron::new(6),
-			                      Neuron::new(6), Neuron::new(6)],
-			neurons_out    :     [Neuron::new(6), Neuron::new(6)],
+			neurons_in     :     [Neuron::new(8), Neuron::new(8), Neuron::new(8)],
+			neurons_hidden : vec![Neuron::new(8), Neuron::new(8), Neuron::new(8),
+			                      Neuron::new(8), Neuron::new(8), Neuron::new(8)],
+			neurons_out    :     [Neuron::new(8),                 Neuron::new(8)],
 			generation: 0
 		}, Colour::new(spawn_size < 32.0), spawn_size, 16)
 	}
