@@ -88,8 +88,8 @@ impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
 		// TODO: consider instead spawning children of all-time high scorers
 		for parent in agents {
-			if parent.body.size > 60.0 {
-				let div        = 1.0 + (parent.body.size - 60.0)/20.0;
+			if parent.body.size > 80.0 {
+				let div        = 1.0 + (parent.body.size - 80.0)/20.0;
 				let inv_chance = parent.inv_split_freq / (div as usize);
 
 				if rand_range(0..=inv_chance) == 0 {
@@ -109,7 +109,7 @@ impl Agent {
 		}
 
 		let spawn_size = if rand_range(0..6) == 0 {
-			rand_range(32.0..80.0) // agent
+			rand_range(32.0..128.0) // agent
 		} else {
 			rand_range(8.0..32.0) // food
 		};
