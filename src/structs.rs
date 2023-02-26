@@ -88,21 +88,23 @@ impl Agent {
 	pub fn new(agents: &mut Vec<Agent>) -> Agent {
 		// TODO: consider instead spawning children of all-time high scorers
 		for parent in agents {
-			let div        = 1.0 + (parent.body.size - 60.0)/20.0;
-			let inv_chance = parent.inv_split_freq / (div as usize);
+			if parent.body.size > 60.0 {
+				let div        = 1.0 + (parent.body.size - 60.0)/20.0;
+				let inv_chance = parent.inv_split_freq / (div as usize);
 
-			if parent.body.size > 60.0 && rand_range(0..inv_chance) == 0 {
-				// Spawn child agent
+				if rand_range(0..inv_chance) == 0 {
+					// Spawn child agent
 
-				let child_size = 0.7*parent.body.size;
+					let child_size = 0.7*parent.body.size;
 
-				parent.body.remove(child_size); // shrink parent
+					parent.body.remove(child_size); // shrink parent
 
-				let freq   = parent.inv_split_freq;
-				let colour = parent.body.colour.clone();
-				let brain  = parent.brain.clone();
+					let freq   = parent.inv_split_freq;
+					let colour = parent.body.colour.clone();
+					let brain  = parent.brain.clone();
 
-				return Agent::with(brain, colour, child_size, freq).mutate()
+					return Agent::with(brain, colour, child_size, freq).mutate()
+				}
 			}
 		}
 
