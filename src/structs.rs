@@ -35,13 +35,13 @@ pub struct Neuron {
 
 	pub act_threshold: f64,
 
-	pub next_conn: Vec<ForwardConn>,
+	pub next_conn: Vec<OutwardConn>,
 
 	reachable: bool
 }
 
 #[derive(Clone, Debug)]
-pub struct ForwardConn {
+pub struct OutwardConn {
 	pub dest_index: usize,
 	pub speed: usize, // currently unused
 	pub weight: f64
@@ -255,7 +255,7 @@ impl Neuron {
 
 			act_threshold: 0.5,
 
-			next_conn: vec![ForwardConn {
+			next_conn: vec![OutwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
 				weight: [-1.0, 1.0][rand_range(0..=1)]
@@ -296,7 +296,7 @@ impl Neuron {
 
 		// Add new outgoing connections
 		for _ in 0..new_conn_count {
-			self.next_conn.push(ForwardConn {
+			self.next_conn.push(OutwardConn {
 				dest_index: rand_range(0..recv_neuron_count),
 				speed: 0,
 				weight: [-1.0, 1.0][rand_range(0..=1)]
