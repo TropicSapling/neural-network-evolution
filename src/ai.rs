@@ -68,7 +68,7 @@ fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64, f64) {
 	let mut nearest = (0.0, 0, 0.0);
 
 	for j in 0..agents.len() {
-		if i == j {continue}
+		if i == j || agents[j].body.size < 32.0 {continue}
 
 		let inv_distance = inv_dist(agents[i].body.pos, agents[j].body.pos);
 		if inv_distance > nearest.0 {
