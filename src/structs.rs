@@ -325,14 +325,17 @@ impl Neuron {
 		// Remove effectively dead connections
 		self.next_conn.retain(|conn| (conn.weight*10.0).round() != 0.0);
 
-		// Assume not reachable until proven otherwise
-		self.reachable = false;
-
 		// If this neuron is inactive, can be recycled
 		if self.next_conn.len() < 1 && *new_neuron_count > 0 {
 			*new_neuron_count -= 1;
 			self.next_conn.push(OutwardConn::new(recv_neuron_count))
 		}
+
+		// Reset excitation
+		self.excitation = 0.0;
+
+		// Assume not reachable until proven otherwise
+		self.reachable = false
 	}
 
 	fn drain(&mut self) {
