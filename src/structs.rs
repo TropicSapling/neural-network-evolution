@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, f64::consts::PI};
 
 use crate::helpers::*;
 
@@ -16,8 +16,6 @@ pub struct Agent {
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-
-// TODO: impl angle_to_near input (direction to nearest minus self angle)
 
 /// neurons_in  : [dist, size_diff, angle_to_near] normalised to [-1, 1]
 /// neurons_out : [mov, rot]
@@ -133,7 +131,7 @@ impl Agent {
 				colour,
 				pos: Pos::new(),
 				size,
-				angle: rand_range(0.0..360.0),
+				angle: rand_range(-PI..PI),
 
 				mov: 0.0,
 				rot: 0.0

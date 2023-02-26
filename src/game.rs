@@ -15,11 +15,11 @@ pub fn update_game(agents: &mut Vec<Agent>) {
 }
 
 fn mov(body: &mut Body) {
-	body.angle += ROT_SPEED * (body.rot as f64);
-	body.angle %= 360.0;
+	body.angle += ROT_SPEED * body.rot;
+	body.angle  = body.angle.sin().atan2(body.angle.cos()); // keep within [-PI, PI]
 
-	body.pos.x += MOV_SPEED * (body.mov as f64) * body.angle.cos();
-	body.pos.y += MOV_SPEED * (body.mov as f64) * body.angle.sin();
+	body.pos.x += MOV_SPEED * body.mov * body.angle.cos();
+	body.pos.y += MOV_SPEED * body.mov * body.angle.sin();
 }
 
 fn shrink(body: &mut Body) {
