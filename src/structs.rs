@@ -114,7 +114,7 @@ impl Agent {
 			                      Neuron::new(8), Neuron::new(8), Neuron::new(8)],
 			neurons_out    :     [Neuron::new(8),                 Neuron::new(8)],
 			generation: 0
-		}, Colour::new(), rand_range(32.0..128.0), 16)
+		}, Colour::new(), rand_range(32.0..128.0), 4)
 	}
 
 	fn with(brain: Brain, colour: Colour, size: f64, freq: usize) -> Agent {
