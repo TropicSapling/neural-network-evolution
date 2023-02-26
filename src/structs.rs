@@ -300,7 +300,9 @@ impl Neuron {
 	}
 
 	// 50/50 if mutation or not
-	fn should_mutate_now() -> bool {rand_range(0..=1) == 1}
+	fn should_mutate_now() -> bool {rand_range(0..2) == 0}
+	// 50/50 if expansion or shrinking
+	fn should_expand_now() -> bool {rand_range(0..2) == 0}
 
 	fn mutate(&mut self) -> (usize, usize) {
 		let mut new_neuron_count = 0;
@@ -315,15 +317,21 @@ impl Neuron {
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
 			if Neuron::should_mutate_now() {
-				let mut_this = rand_range(0..3) == 0 || rand_range(0..3) == 0;
-				let add_conn = rand_range(0..2) == 0;
-
-				if mut_this {
-					conn.weight += [-1.0, 1.0][rand_range(0..=1)]
-				} else if add_conn {
-					new_conn_count += 1
+				if rand_range(0..=(conn.weight.abs() as usize)) == 0 {
+					// Sometimes flip weight
+					conn.weight = -conn.weight
 				} else {
-					new_neuron_count += 1
+					if Neuron::should_expand_now() {
+						// Sometimes expand weight or other stuff
+						match rand_range(0..3) {
+							0 => Neuron::expand_or_shrink(&mut conn.weight, 1.0),
+							1 => new_conn_count += 1,
+							_ => new_neuron_count += 1
+						}
+					} else {
+						// Sometimes shrink weight (which can effectively remove)
+						Neuron::expand_or_shrink(&mut conn.weight, -1.0)
+					}
 				}
 			}
 		}
@@ -338,16 +346,20 @@ impl Neuron {
 	}
 
 	fn drain(&mut self) {
-		// Drain excitation towards a neutral state of 0
-		if self.excitation > 0.0 {
-			self.excitation -= self.tick_drain.abs();
-			if self.excitation < 0.0 {
-				self.excitation = 0.0
+		Neuron::expand_or_shrink(&mut self.excitation, -self.tick_drain.abs())
+	}
+
+	fn expand_or_shrink(state: &mut f64, change: f64) {
+		// Move towards or away from a neutral state of 0
+		if *state > 0.0 {
+			*state += change;
+			if *state < 0.0 {
+				*state = 0.0
 			}
 		} else {
-			self.excitation += self.tick_drain.abs();
-			if self.excitation > 0.0 {
-				self.excitation = 0.0
+			*state -= change;
+			if *state > 0.0 {
+				*state = 0.0
 			}
 		}
 	}

@@ -22,7 +22,7 @@ static mut AGENTS: Vec<Agent> = vec![];
 
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
-	console_log!("Starting version 0.1.22")
+	console_log!("Starting version 0.1.23")
 }
 
 #[wasm_bindgen]
