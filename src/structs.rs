@@ -373,15 +373,15 @@ impl fmt::Debug for Brain {
 
 		s += "\tneurons_in: [\n";
 		for neuron in &self.neurons_in {
-			s += &format!("\t{neuron:#?},\n")
+			s += &format!("\t\t{neuron:#?},\n")
 		}
 
 		let (mut unreachables, mut inactives) = (0, 0);
 
-		s += "],\n\n\tneurons_hidden: [\n";
+		s += "\t],\n\n\tneurons_hidden: [\n";
 		for neuron in &self.neurons_hidden {
 			if neuron.reachable {
-				s += &format!("\t{neuron:#?},\n")
+				s += &format!("\t\t{neuron:#?},\n")
 			} else {
 				unreachables += 1;
 				if neuron.next_conn.len() < 1 {
@@ -389,14 +389,14 @@ impl fmt::Debug for Brain {
 				}
 			}
 		}
-		s += &format!("\n\tUNREACHABLES: {unreachables}, INACTIVES: {inactives}\n");
+		s += &format!("\n\t\tUNREACHABLES: {unreachables}, INACTIVES: {inactives}\n");
 
-		s += "],\n\n\tneurons_out: [\n";
+		s += "\t],\n\n\tneurons_out: [\n";
 		for neuron in &self.neurons_out {
-			s += &format!("\t{neuron:#?},\n")
+			s += &format!("\t\t{neuron:#?},\n")
 		}
 
-		write!(f, "{s}],\n\n\tgeneration: {},\n}}", self.generation)
+		write!(f, "{s}\t],\n\n\tgeneration: {},\n}}", self.generation)
 	}
 }
 
