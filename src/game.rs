@@ -1,9 +1,11 @@
+use std::f64::consts::PI;
+
 use crate::structs::*;
 
-const GAME_SIZE: f64 = 600.0;
+pub const GAME_SIZE: f64 = 600.0;
 
-const MOV_SPEED: f64 = 1.0;
-const ROT_SPEED: f64 = 0.01;
+const MOV_SPEED: f64 = 2.0;
+const ROT_SPEED: f64 = 0.05;
 
 pub fn update_game(agents: &mut Vec<Agent>) {
 	for agent in &mut *agents {
@@ -15,11 +17,11 @@ pub fn update_game(agents: &mut Vec<Agent>) {
 }
 
 fn mov(body: &mut Body) {
-	body.angle += ROT_SPEED * body.rot;
+	body.angle += ROT_SPEED * PI * body.rot.max(-1.0).min(1.0);
 	body.angle  = body.angle.sin().atan2(body.angle.cos()); // keep within [-PI, PI]
 
-	body.pos.x += MOV_SPEED * body.mov * body.angle.cos();
-	body.pos.y += MOV_SPEED * body.mov * body.angle.sin();
+	body.pos.x += MOV_SPEED * body.mov.max(-1.0).min(1.0) * body.angle.cos();
+	body.pos.y += MOV_SPEED * body.mov.max(-1.0).min(1.0) * body.angle.sin();
 }
 
 fn shrink(body: &mut Body) {
