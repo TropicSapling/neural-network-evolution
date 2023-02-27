@@ -97,8 +97,6 @@ impl Agent {
 			new_agent = new_agent.mutate()
 		}
 
-		new_agent.brain.generation = 0;
-
 		new_agent
 	}
 
@@ -119,7 +117,10 @@ impl Agent {
 
 					let freq   = parent.inv_split_freq;
 					let colour = parent.body.colour.clone();
-					let brain  = parent.brain.clone();
+
+					let mut brain = parent.brain.clone();
+
+					brain.generation += 1;
 
 					// Spawn identical copy of self in 1/3 of cases, otherwise mutate
 					return if rand_range(0..3) == 0 {
@@ -213,8 +214,6 @@ impl Agent {
 
 			neuron.next_conn.push(OutwardConn::new(recv_neurons))
 		}
-
-		self.brain.generation += 1;
 
 		self
 	}
