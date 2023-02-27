@@ -109,6 +109,7 @@ impl Agent {
 				let div        = 1.0 + (parent.body.size - 64.0)/16.0;
 				let inv_chance = parent.inv_split_freq / (div as usize);
 
+				// TODO: decide when to split based on a third neuron output instead?
 				if rand_range(0..=inv_chance) == 0 {
 					// Spawn child agent
 
@@ -263,6 +264,7 @@ impl Brain {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
+				// TODO: ReLU (+= weight*excitation)
 				recv_neuron.excitation += conn.weight;
 				recv_neuron.reachable   = true
 			}
@@ -284,8 +286,10 @@ impl Neuron {
 		}
 	}
 
-	// 50/50 if mutation or not
-	fn should_mutate_now() -> bool {rand_range(0..2) == 0}
+	// TODO: maybe have mutation rate part of neuron properties?
+
+	// 33/67 if mutation or not
+	fn should_mutate_now() -> bool {rand_range(0..3) == 0}
 	// 50/50 if expansion or shrinking
 	fn should_expand_now() -> bool {rand_range(0..2) == 0}
 
