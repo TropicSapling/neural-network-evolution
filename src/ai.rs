@@ -59,6 +59,8 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 			}
 		}
 
+		// TODO: normalise outputs, here and/or in game.rs
+
 		// Movement & rotation costs energy
 		shrink_by(body, 0.9995_f64.powf(body.mov.abs()/2.0 + body.rot.abs()/8.0))
 	}
