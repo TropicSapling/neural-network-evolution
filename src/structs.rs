@@ -121,7 +121,12 @@ impl Agent {
 					let colour = parent.body.colour.clone();
 					let brain  = parent.brain.clone();
 
-					return Some(Agent::with(brain, colour, child_size, freq).mutate())
+					// Spawn identical copy of self in 1/3 of cases, otherwise mutate
+					return if rand_range(0..3) == 0 {
+						Some(Agent::with(brain, colour, child_size, freq))
+					} else {
+						Some(Agent::with(brain, colour, child_size, freq).mutate())
+					}
 				}
 			}
 		}
