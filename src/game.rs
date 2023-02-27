@@ -27,7 +27,11 @@ fn mov(body: &mut Body) {
 fn shrink(body: &mut Body) {
 	let size0 = body.size;
 
-	body.size  *= 0.9995;
+	let mov = body.mov.abs().min(1.0);
+	let rot = body.rot.abs().min(1.0);
+
+	// Movement & rotation costs energy (but always shrink a little regardless)
+	body.size  *= 0.9995_f64.powf(1.0 + mov/2.0 + rot/8.0);
 	body.pos.x += (size0 - body.size)/2.0;
 	body.pos.y += (size0 - body.size)/2.0;
 }

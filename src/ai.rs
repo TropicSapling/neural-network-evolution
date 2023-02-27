@@ -58,9 +58,6 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 				body.rot += conn.weight;
 			}
 		}
-
-		// Movement & rotation costs energy
-		shrink_by(body, 0.9995_f64.powf(body.mov.abs()/2.0 + body.rot.abs()/8.0))
 	}
 }
 
@@ -91,12 +88,4 @@ fn angle_between(agents: &Vec<Agent>, i: usize, j: usize) -> f64 {
 fn inv_dist(pos1: Pos, pos2: Pos) -> f64 {
 	(GAME_SIZE - (pos1.x - pos2.x).abs()).powf(4.0) +
 	(GAME_SIZE - (pos1.y - pos2.y).abs()).powf(4.0)
-}
-
-fn shrink_by(body: &mut Body, factor: f64) {
-	let size0 = body.size;
-
-	body.size  *= factor;
-	body.pos.x += (size0 - body.size)/2.0;
-	body.pos.y += (size0 - body.size)/2.0;
 }
