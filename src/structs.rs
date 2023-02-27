@@ -93,7 +93,7 @@ impl Agent {
 			generation: 0
 		}, Colour::new(), rand_range(48.0..64.0), 256);
 
-		for _ in 0..rand_range(0..8) {
+		for _ in 0..rand_range(0..16) {
 			new_agent = new_agent.mutate()
 		}
 
@@ -288,8 +288,8 @@ impl Neuron {
 
 	// TODO: maybe have mutation rate part of neuron properties?
 
-	// 33/67 if mutation or not
-	fn should_mutate_now() -> bool {rand_range(0..3) == 0}
+	// 20/80 if mutation or not
+	fn should_mutate_now() -> bool {rand_range(0..5) == 0}
 	// 50/50 if expansion or shrinking
 	fn should_expand_now() -> bool {rand_range(0..2) == 0}
 
