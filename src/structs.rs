@@ -276,7 +276,7 @@ impl Neuron {
 			excitation: 0.0,
 			tick_drain: 1.0,
 
-			act_threshold: 0.5,
+			act_threshold: 0.0,
 
 			next_conn: vec![OutwardConn::new(recv_neuron_count)],
 
