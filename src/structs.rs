@@ -103,8 +103,8 @@ impl Agent {
 	pub fn maybe_split(agents: &mut Vec<Agent>) -> Option<Agent> {
 		// TODO: consider instead spawning children of all-time high scorers
 		for parent in agents {
-			if parent.body.size > 64.0 {
-				let div        = 1.0 + (parent.body.size - 64.0)/16.0;
+			if parent.body.size > 80.0 {
+				let div        = 1.0 + (parent.body.size - 80.0)/16.0;
 				let inv_chance = parent.inv_split_freq / (div as usize);
 
 				// TODO: decide when to split based on a third neuron output instead?
