@@ -434,7 +434,7 @@ impl fmt::Debug for Neuron {
 					}
 
 					if total_res < 0.0 {"🔴 "} else {"🟢 "}
-				} else {""}
+				} else {"✖️ "}
 			);
 
 			let mut s = format!("{s}Neuron {{IS@{:.1} | ACT@{:.1} | ", is_at, act_at);
