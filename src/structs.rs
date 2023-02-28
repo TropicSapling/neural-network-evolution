@@ -122,8 +122,8 @@ impl Agent {
 
 					brain.generation += 1;
 
-					// Spawn identical copy of self in 1/1 of cases, otherwise mutate
-					return if rand_range(0..1) == 0 {
+					// Spawn identical copy of self in 1/2 of cases, otherwise mutate
+					return if rand_range(0..2) == 0 {
 						Some(Agent::with(brain, colour, child_size, freq))
 					} else {
 						Some(Agent::with(brain, colour, child_size, freq).mutate())
@@ -424,7 +424,20 @@ impl fmt::Debug for Neuron {
 			write!(f, "Neuron {{INACTIVE}}")
 		} else {
 			let (is_at, act_at) = (self.excitation, self.act_threshold);
-			let mut s = format!("Neuron {{IS@{:.1} | ACT@{:.1} | ", is_at, act_at);
+
+			// Mark firing neurons (red = negative response, green = positive)
+			let s = String::from(
+				if is_at >= act_at {
+					let mut total_res = 0.0;
+					for conn in &self.next_conn {
+						total_res += conn.weight;  
+					}
+
+					if total_res < 0.0 {"🔴 "} else {"🟢 "}
+				} else {""}
+			);
+
+			let mut s = format!("{s}Neuron {{IS@{:.1} | ACT@{:.1} | ", is_at, act_at);
 
 			let mut conn_iter = self.next_conn.iter().peekable();
 			while let Some(conn) = conn_iter.next() {
