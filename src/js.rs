@@ -10,6 +10,9 @@ extern "C" {
 
 	#[wasm_bindgen(js_namespace = window)]
 	pub fn draw_agent(r: usize, g: usize, b: usize, x: f64, y: f64, size: f64);
+
+	#[wasm_bindgen(js_namespace = window)]
+	pub fn draw_neural_network(s: String);
 }
 
 macro_rules! console_log {

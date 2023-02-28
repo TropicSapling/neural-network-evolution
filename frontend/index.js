@@ -50,6 +50,10 @@ window.draw_agent = function draw_agent(r, g, b, x, y, size) {
 	canvas.fillRect(x, y, size, size);
 }
 
+window.draw_neural_network = function draw_neural_network(s) {
+	document.querySelector("code").textContent = s;
+}
+
 init().then(() => {
 	console.log("Finished loading WebAssembly.");
 	console.log("Available toggles: [stopAll(), runAtFPS(fps), inverseSpawnRate].");

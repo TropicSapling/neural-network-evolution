@@ -8,3 +8,7 @@ canvas {
   margin-top: -300px;
   border: 2px solid black;
 }
+
+code {
+  white-space: pre-wrap;
+}

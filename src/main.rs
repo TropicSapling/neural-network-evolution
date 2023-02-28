@@ -22,7 +22,7 @@ static mut AGENTS: Vec<Agent> = vec![];
 
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
-	console_log!("Starting version 0.1.44")
+	console_log!("Starting version 0.1.45")
 }
 
 #[wasm_bindgen]
@@ -47,7 +47,10 @@ pub unsafe fn print_agent_at(x: f64, y: f64) {
 		let (pos, size) = (agent.body.pos, agent.body.size);
 
 		if (pos.x..pos.x+size).contains(&x) && (pos.y..pos.y+size).contains(&y) {
-			console_log!("Neural Network @ ({x}, {y}): {:#?}", agent.brain)
+			let network = format!("Neural Network @ ({x}, {y}): {:#?}", agent.brain);
+
+			console_log!("{network}");
+			draw_neural_network(network);
 		}
 	}
 }
