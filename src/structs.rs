@@ -416,12 +416,12 @@ impl fmt::Debug for Neuron {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		if !self.reachable {
 			if self.next_conn.len() < 1 {
-				write!(f, "Neuron {{UNREACHABLE & INACTIVE}}")
+				write!(f, "❔ Neuron {{UNREACHABLE & INACTIVE}}")
 			} else {
-				write!(f, "Neuron {{UNREACHABLE, conns={}}}", self.next_conn.len())
+				write!(f, "❔ Neuron {{UNREACHABLE, conns={}}}", self.next_conn.len())
 			}
 		} else if self.next_conn.len() < 1 {
-			write!(f, "Neuron {{INACTIVE}}")
+			write!(f, "❔ Neuron {{INACTIVE}}")
 		} else {
 			let (is_at, act_at) = (self.excitation, self.act_threshold);
 
