@@ -88,7 +88,7 @@ impl Agent {
 		// Prioritise spawning from existing generations
 		for parent in agents {
 			if parent.brain.generation > 0    &&
-			   parent.body.size        > 32.0 && rand_range(0..16) == 0 {
+			   parent.body.size        > 32.0 && rand_range(0..32) == 0 {
 				return parent.spawn_child(rand_range(48.0..64.0))
 			}
 		}
