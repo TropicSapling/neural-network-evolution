@@ -100,7 +100,7 @@ impl Agent {
 			                      Neuron::new(8), Neuron::new(8), Neuron::new(8)],
 			neurons_out    :     [Neuron::new(8),                 Neuron::new(8)],
 			generation: 0
-		}, Colour::new(), rand_range(48.0..64.0), 256);
+		}, Colour::new(), 48.0, 256);
 
 		for _ in 0..rand_range(0..16) {
 			new_agent = new_agent.mutate()
