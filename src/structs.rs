@@ -21,11 +21,11 @@ pub struct Agent {
 /// neurons_out : [mov, rot] normalised to [-1, 1]
 #[derive(Clone)]
 pub struct Brain {
-	pub neurons_in     : [Neuron; 3],
-	pub neurons_hidden : Vec<Neuron>,
-	pub neurons_out    : [Neuron; 2],
+	neurons_in     : [Neuron; 3],
+	neurons_hidden : Vec<Neuron>,
+	neurons_out    : [Neuron; 2],
 
-	pub generation: usize // for debugging/display
+	generation: usize // for debugging/display
 }
 
 #[derive(Clone)]
@@ -122,8 +122,8 @@ impl Agent {
 
 					brain.generation += 1;
 
-					// Spawn identical copy of self in 1/2 of cases, otherwise mutate
-					return if rand_range(0..2) == 0 {
+					// Spawn identical copy of self in 1/1 of cases, otherwise mutate
+					return if rand_range(0..1) == 0 {
 						Some(Agent::with(brain, colour, child_size, freq))
 					} else {
 						Some(Agent::with(brain, colour, child_size, freq).mutate())
@@ -225,6 +225,8 @@ impl Agent {
 
 
 impl Brain {
+	pub fn input(&mut self) -> &mut [Neuron; 3] {&mut self.neurons_in}
+
 	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
 		// Drain output neurons from previous excitation
 		for i in 0..OUTS {

@@ -14,7 +14,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 		let agent = &mut agents[i];
 		let body  = &mut agent.body;
-		let input = &mut agent.brain.neurons_in;
+		let input = agent.brain.input();
 
 		// Input neurons always fire
 		(input[0].excitation, input[0].act_threshold) = (0.0, 0.0);
