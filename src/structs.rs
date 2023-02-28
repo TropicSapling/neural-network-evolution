@@ -400,7 +400,7 @@ impl fmt::Debug for Brain {
 				}
 			}
 		}
-		s += &format!("\n\t\tUNREACHABLES: {unreachables}, INACTIVES: {inactives}\n");
+		s += &format!("\n\t\tUNREACHABLES: {unreachables} (inactive: {inactives})\n");
 
 		s += "\t],\n\n\tneurons_out: [\n";
 		for (i, neuron) in self.neurons_out.iter().enumerate() {
