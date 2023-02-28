@@ -84,7 +84,15 @@ pub struct Pos {pub x: f64, pub y: f64}
 
 
 impl Agent {
-	pub fn new() -> Agent {
+	pub fn new(agents: &Vec<Agent>) -> Agent {
+		// Prioritise spawning from existing generations
+		for parent in agents {
+			if parent.brain.generation > 0 && rand_range(0..8) == 0 {
+				return parent.spawn_child(rand_range(48.0..64.0))
+			}
+		}
+
+		// But sometimes spawn an entirely new agent
 		let mut new_agent = Agent::with(Brain {
 			neurons_in     :     [Neuron::new(8), Neuron::new(8), Neuron::new(8)],
 			neurons_hidden : vec![Neuron::new(8), Neuron::new(8), Neuron::new(8),
@@ -115,19 +123,7 @@ impl Agent {
 
 					parent.body.remove(child_size); // shrink parent
 
-					let freq   = parent.inv_split_freq;
-					let colour = parent.body.colour.clone();
-
-					let mut brain = parent.brain.clone();
-
-					brain.generation += 1;
-
-					// Spawn identical copy of self in 1/2 of cases, otherwise mutate
-					return if rand_range(0..2) == 0 {
-						Some(Agent::with(brain, colour, child_size, freq))
-					} else {
-						Some(Agent::with(brain, colour, child_size, freq).mutate())
-					}
+					return Some(parent.spawn_child(child_size))
 				}
 			}
 		}
@@ -152,6 +148,22 @@ impl Agent {
 			alive: true,
 
 			inv_split_freq: freq
+		}
+	}
+
+	fn spawn_child(&self, child_size: f64) -> Agent {
+		let freq   = self.inv_split_freq;
+		let colour = self.body.colour.clone();
+
+		let mut brain = self.brain.clone();
+
+		brain.generation += 1;
+
+		// Spawn identical copy of self in 1/2 of cases, otherwise mutate
+		return if rand_range(0..2) == 0 {
+			Agent::with(brain, colour, child_size, freq)
+		} else {
+			Agent::with(brain, colour, child_size, freq).mutate()
 		}
 	}
 

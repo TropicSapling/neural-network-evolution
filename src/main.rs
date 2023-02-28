@@ -22,14 +22,14 @@ static mut AGENTS: Vec<Agent> = vec![];
 
 #[wasm_bindgen(start)]
 pub unsafe fn start() {
-	console_log!("Starting version 0.1.37")
+	console_log!("Starting version 0.1.38")
 }
 
 #[wasm_bindgen]
 pub unsafe fn run(inverse_spawn_rate: usize) {
 	// Randomly spawn new agents
 	if rand_range(0..inverse_spawn_rate) == 0 {
-		AGENTS.push(Agent::new())
+		AGENTS.push(Agent::new(&AGENTS))
 	}
 
 	if let Some(agent) = Agent::maybe_split(&mut AGENTS) {
