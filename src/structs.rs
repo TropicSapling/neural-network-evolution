@@ -268,7 +268,7 @@ impl Brain {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
-				// TODO: ReLU (+= weight*excitation)
+				// TODO: sometimes (50/50?) ReLU (+= weight*excitation)
 				recv_neuron.excitation += conn.weight;
 				recv_neuron.reachable   = true
 			}
@@ -388,9 +388,9 @@ impl fmt::Debug for Brain {
 		let (mut unreachables, mut inactives) = (0, 0);
 
 		s += "\t],\n\n\tneurons_hidden: [\n";
-		for neuron in &self.neurons_hidden {
+		for (i, neuron) in self.neurons_hidden.iter().enumerate() {
 			if neuron.reachable {
-				s += &format!("\t\t{neuron:#?},\n")
+				s += &format!("\t\t#{}: {neuron:#?},\n", i + OUTS)
 			} else {
 				unreachables += 1;
 				if neuron.next_conn.len() < 1 {
@@ -401,8 +401,8 @@ impl fmt::Debug for Brain {
 		s += &format!("\n\t\tUNREACHABLES: {unreachables}, INACTIVES: {inactives}\n");
 
 		s += "\t],\n\n\tneurons_out: [\n";
-		for neuron in &self.neurons_out {
-			s += &format!("\t\t{neuron:#?},\n")
+		for (i, neuron) in self.neurons_out.iter().enumerate() {
+			s += &format!("\t\t#{i}: {neuron:#?},\n")
 		}
 
 		write!(f, "{s}\t],\n\n\tgeneration: {},\n}}", self.generation)
