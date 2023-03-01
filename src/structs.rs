@@ -102,7 +102,7 @@ impl Agent {
 			generation: 0
 		}, Colour::new(), 48.0, 256);
 
-		for _ in 0..rand_range(0..16) {
+		for _ in 0..rand_range(0..8) {
 			new_agent = new_agent.mutate()
 		}
 
