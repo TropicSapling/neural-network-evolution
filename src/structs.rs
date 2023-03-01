@@ -309,8 +309,8 @@ impl Neuron {
 
 	// 20/80 if mutation or not
 	fn should_mutate_now() -> bool {rand_range(0..5) == 0}
-	// 67/33 if expansion or shrinking
-	fn should_expand_now() -> bool {rand_range(0..3) < 2}
+	// 100/0 if expansion or shrinking
+	fn should_expand_now() -> bool {rand_range(0..3) < 3}
 
 	fn mutate(&mut self,
 		new_neuron_count  : &mut usize,
