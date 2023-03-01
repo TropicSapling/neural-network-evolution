@@ -307,10 +307,10 @@ impl Neuron {
 
 	// TODO: maybe have mutation rate part of neuron properties?
 
-	// 20/80 if mutation or not
-	fn should_mutate_now() -> bool {rand_range(0..5) == 0}
-	// 100/0 if expansion or shrinking
-	fn should_expand_now() -> bool {rand_range(0..3) < 3}
+	// 33/67 if mutation or not
+	fn should_mutate_now() -> bool {rand_range(0..3) == 0}
+	// 67/33 if expansion or shrinking
+	fn should_expand_now() -> bool {rand_range(0..3) < 2}
 
 	fn mutate(&mut self,
 		new_neuron_count  : &mut usize,
@@ -326,7 +326,7 @@ impl Neuron {
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
 			if Neuron::should_mutate_now() {
-				if rand_range(0..=(conn.weight.abs() as usize)) == 0 {
+				if rand_range(0..(2 + conn.weight.abs() as usize)) == 0 {
 					// Sometimes flip weight
 					conn.weight = -conn.weight
 				} else {
