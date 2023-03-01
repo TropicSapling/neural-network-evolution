@@ -49,7 +49,7 @@ pub unsafe fn print_agent_at(x: f64, y: f64) {
 		if (pos.x..pos.x+size).contains(&x) && (pos.y..pos.y+size).contains(&y) {
 			let network = format!("Neural Network @ ({x}, {y}): {:#?}", agent.brain);
 
-			console_log!("{network}");
+			console_log!("{network}\n\nAGENTS ALIVE: {}", AGENTS.len());
 			draw_neural_network(network);
 		}
 	}
