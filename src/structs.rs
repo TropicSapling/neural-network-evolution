@@ -44,7 +44,9 @@ pub struct Neuron {
 pub struct OutwardConn {
 	pub dest_index: usize,
 	pub speed: usize, // currently unused
-	pub weight: f64
+	pub weight: f64,
+
+	relu: bool
 }
 
 // TODO - STDP (Spike-Timing-Dependent Plasticity):
@@ -267,8 +269,10 @@ impl Brain {
 			_    => &self.neurons_hidden[i]
 		};
 
+		let excitation = neuron.excitation;
+
 		// If neuron activated...
-		if neuron.excitation >= neuron.act_threshold {
+		if excitation >= neuron.act_threshold {
 			// ... prepare all connections for activation
 			let mut activations = vec![];
 			for conn in &neuron.next_conn {
@@ -283,9 +287,13 @@ impl Brain {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
-				// TODO: sometimes (50/50?) ReLU (+= weight*excitation)
-				recv_neuron.excitation += conn.weight;
-				recv_neuron.reachable   = true
+				if conn.relu {
+					recv_neuron.excitation += conn.weight * excitation
+				} else {
+					recv_neuron.excitation += conn.weight
+				}
+
+				recv_neuron.reachable = true
 			}
 		}
 	}
@@ -386,7 +394,8 @@ impl OutwardConn {
 		OutwardConn {
 			dest_index: rand_range(0..recv_neuron_count),
 			speed: 0,
-			weight: [-1.0, 1.0][rand_range(0..=1)]
+			weight: [-1.0, 1.0][rand_range(0..=1)],
+			relu: [false, true][rand_range(0..=1)]
 		}
 	}
 }
