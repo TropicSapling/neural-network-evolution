@@ -463,7 +463,9 @@ impl fmt::Debug for Neuron {
 
 			let mut conn_iter = self.next_conn.iter().peekable();
 			while let Some(conn) = conn_iter.next() {
-				s += &format!("(*{:.1})->#{}", conn.weight, conn.dest_index);
+				let relu = if conn.relu {"*"} else {""};
+
+				s += &format!("({relu}{:.1})->#{}", conn.weight, conn.dest_index);
 				if !conn_iter.peek().is_none() {
 					s += ", "
 				}
