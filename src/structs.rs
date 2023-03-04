@@ -49,10 +49,6 @@ pub struct OutwardConn {
 	relu: bool
 }
 
-// TODO - STDP (Spike-Timing-Dependent Plasticity):
-// Strengthen/weaken connection weight if receiving neuron
-// activates shortly after/before connection fired.
-
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
@@ -280,17 +276,29 @@ impl Brain {
 			}
 
 			// ... and then activate the connections
-			for conn in activations {
+			for mut conn in activations {
 				let recv_neuron = if conn.dest_index < OUTS {
 					&mut self.neurons_out[conn.dest_index]
 				} else {
 					&mut self.neurons_hidden[conn.dest_index - OUTS]
 				};
 
+				let prev_recv_excitation = recv_neuron.excitation;
+
 				if conn.relu {
 					recv_neuron.excitation += conn.weight * excitation
 				} else {
 					recv_neuron.excitation += conn.weight
+				}
+
+				// STDP (Spike-Timing-Dependent Plasticity)
+				// TODO: maybe make more realistic?
+				if prev_recv_excitation >= recv_neuron.act_threshold {
+					// Receiver already has fired => weaken connection
+					Neuron::expand_or_shrink(&mut conn.weight, -1.0)
+				} else if recv_neuron.excitation >= recv_neuron.act_threshold {
+					// Receiver firing thanks to this => strengthen connection
+					Neuron::expand_or_shrink(&mut conn.weight, 1.0)
 				}
 
 				recv_neuron.reachable = true
