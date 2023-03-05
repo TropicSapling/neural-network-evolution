@@ -288,20 +288,20 @@ impl Brain {
 				if conn.relu {
 					recv_neuron.excitation += conn.weight * excitation
 				} else {
-					recv_neuron.excitation += conn.weight
-				}
+					recv_neuron.excitation += conn.weight;
 
-				// STDP (Spike-Timing-Dependent Plasticity)
-				// TODO: maybe make more realistic?
-				if prev_recv_excitation >= recv_neuron.act_threshold {
-					// Receiver already has fired => weaken connection
-					if conn.weight.abs() > 1.0 {
-						Neuron::expand_or_shrink(&mut conn.weight, -1.0)
-					}
-				} else if recv_neuron.excitation >= recv_neuron.act_threshold {
-					// Receiver firing thanks to this => strengthen connection
-					if conn.weight.abs() < 8.0 {
-						Neuron::expand_or_shrink(&mut conn.weight, 1.0)
+					// STDP (Spike-Timing-Dependent Plasticity)
+					// TODO: maybe make more realistic?
+					if prev_recv_excitation >= recv_neuron.act_threshold {
+						// Receiver already has fired => weaken connection
+						if conn.weight.abs() > 1.0 {
+							Neuron::expand_or_shrink(&mut conn.weight, -1.0)
+						}
+					} else if recv_neuron.excitation >= recv_neuron.act_threshold {
+						// Receiver firing thanks to this => strengthen connection
+						if conn.weight.abs() < 8.0 {
+							Neuron::expand_or_shrink(&mut conn.weight, 1.0)
+						}
 					}
 				}
 
