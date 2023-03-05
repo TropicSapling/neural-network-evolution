@@ -295,10 +295,14 @@ impl Brain {
 				// TODO: maybe make more realistic?
 				if prev_recv_excitation >= recv_neuron.act_threshold {
 					// Receiver already has fired => weaken connection
-					Neuron::expand_or_shrink(&mut conn.weight, -1.0)
+					if conn.weight.abs() > 1.0 {
+						Neuron::expand_or_shrink(&mut conn.weight, -1.0)
+					}
 				} else if recv_neuron.excitation >= recv_neuron.act_threshold {
 					// Receiver firing thanks to this => strengthen connection
-					Neuron::expand_or_shrink(&mut conn.weight, 1.0)
+					if conn.weight.abs() < 8.0 {
+						Neuron::expand_or_shrink(&mut conn.weight, 1.0)
+					}
 				}
 
 				recv_neuron.reachable = true
