@@ -276,7 +276,7 @@ impl Brain {
 			}
 
 			// ... and then activate the connections
-			for mut conn in activations {
+			for conn in &mut activations {
 				let recv_neuron = if conn.dest_index < OUTS {
 					&mut self.neurons_out[conn.dest_index]
 				} else {
@@ -302,6 +302,12 @@ impl Brain {
 				}
 
 				recv_neuron.reachable = true
+			}
+
+			// ... and finally apply potential STDP changes
+			match is_input {
+				true => self.neurons_in[i].next_conn     = activations,
+				_    => self.neurons_hidden[i].next_conn = activations
 			}
 		}
 	}
