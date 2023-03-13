@@ -9,47 +9,53 @@ mod helpers;
 mod game;
 mod ai;
 
+use std::sync::Mutex;
+
 use wasm_bindgen::prelude::*;
 
 use {helpers::*, js::*, structs::*};
 use game::update_game;
 use ai::update_ai;
 
-// To my knowledge, this unfortunately has to be a mutable static to work with WASM
-static mut AGENTS: Vec<Agent> = vec![];
+// Need static mutex to work with WASM
+static AGENTS: Mutex<Vec<Agent>> = Mutex::new(vec![]);
 
 ////////////////////////////////
 
 #[wasm_bindgen(start)]
-pub unsafe fn start() {
-	console_log!("Starting version 0.2.4")
+pub fn start() {
+	console_log!("Starting version 0.2.5")
 }
 
 #[wasm_bindgen]
-pub unsafe fn run(inverse_spawn_rate: usize) {
+pub fn run(inverse_spawn_rate: usize) {
+	let mut agents = AGENTS.lock().unwrap();
+
 	// Randomly spawn new agents
 	if rand_range(0..inverse_spawn_rate) == 0 {
-		AGENTS.push(Agent::new(&AGENTS))
+		let agent = Agent::new(&agents);
+		agents.push(agent)
 	}
 
-	if let Some(agent) = Agent::maybe_split(&mut AGENTS) {
-		AGENTS.push(agent)
+	if let Some(agent) = Agent::maybe_split(&mut agents) {
+		agents.push(agent)
 	}
 
-	update_ai(&mut AGENTS);
-	update_game(&mut AGENTS);
-	draw_frame(&AGENTS);
+	update_ai(&mut agents);
+	update_game(&mut agents);
+	draw_frame(&agents);
 }
 
 #[wasm_bindgen]
-pub unsafe fn print_agent_at(x: f64, y: f64) {
-	for agent in &AGENTS {
+pub fn print_agent_at(x: f64, y: f64) {
+	let agents = AGENTS.lock().unwrap();
+	for agent in agents.iter() {
 		let (pos, size) = (agent.body.pos, agent.body.size);
 
 		if (pos.x..pos.x+size).contains(&x) && (pos.y..pos.y+size).contains(&y) {
 			let network = format!("Neural Network @ ({x}, {y}): {:#?}", agent.brain);
 
-			console_log!("{network}\n\nAGENTS ALIVE: {}", AGENTS.len());
+			console_log!("{network}\n\nAGENTS ALIVE: {}", agents.len());
 			draw_neural_network(network);
 		}
 	}
