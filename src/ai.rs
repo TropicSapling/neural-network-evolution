@@ -62,6 +62,8 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 }
 
 fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64, f64) {
+	// TODO: also get distance & angle to nearest border edge?
+
 	let mut nearest = (0.0, 0, 0.0);
 
 	for j in 0..agents.len() {
