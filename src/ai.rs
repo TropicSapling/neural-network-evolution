@@ -10,7 +10,7 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 			continue // for performance reasons, small agents are just stationary food
 		}
 
-		let (near_inv_dist, near_size, near_angle) = get_nearest(agents, i);
+		let (near_size, near_inv_dist, near_angle) = get_nearest(agents, i);
 
 		let agent = &mut agents[i];
 		let body  = &mut agent.body;
@@ -21,18 +21,18 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		(input[1].excitation, input[1].act_threshold) = (0.0, 0.0);
 		(input[2].excitation, input[2].act_threshold) = (0.0, 0.0);
 
-		// Distance to nearest as first input
+		// Relative size of nearest as first input
 		for conn in &mut input[0].next_conn {
-			conn.weight = near_inv_dist / MAX_DIST
-		}
-
-		// Relative size of nearest as second input
-		for conn in &mut input[1].next_conn {
 			conn.weight = if body.size > near_size*1.1 {
 				1.0
 			} else if near_size > body.size*1.1 {
 				-1.0
 			} else {0.0}
+		}
+
+		// Distance to nearest as second input
+		for conn in &mut input[1].next_conn {
+			conn.weight = near_inv_dist / MAX_DIST
 		}
 
 		// Angle towards nearest as third input
@@ -64,18 +64,18 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64, f64) {
 	// TODO: also get distance & angle to nearest border edge?
 
-	let mut nearest = (0.0, 0, 0.0);
+	let mut nearest = (0, 0.0, 0.0); // (ID, inv_dist, angle)
 
 	for j in 0..agents.len() {
 		if i == j || agents[j].body.size < 32.0 {continue}
 
-		let inv_distance = inv_dist(agents[i].body.pos, agents[j].body.pos);
-		if inv_distance > nearest.0 {
-			nearest = (inv_distance, j, angle_between(&agents, i, j))
+		let inv_dist_to_j = inv_dist(agents[i].body.pos, agents[j].body.pos);
+		if inv_dist_to_j > nearest.1 {
+			nearest = (j, inv_dist_to_j, angle_between(&agents, i, j))
 		}
 	}
 
-	(nearest.0, agents[nearest.1].body.size, nearest.2)
+	(agents[nearest.0].body.size, nearest.1, nearest.2)
 }
 
 // Note: returns radians within [-PI, PI]

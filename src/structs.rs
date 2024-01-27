@@ -17,7 +17,7 @@ pub struct Agent {
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
-/// neurons_in  : [dist, size_diff, angle_to_near] normalised to [-1, 1]
+/// neurons_in  : [size_diff, dist, angle_to_near] normalised to [-1, 1]
 /// neurons_out : [mov, rot] normalised to [-1, 1]
 #[derive(Clone)]
 pub struct Brain {
