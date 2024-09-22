@@ -46,6 +46,8 @@ function addHeapObject(obj) {
     heap[idx] = obj;
     return idx;
 }
+
+function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
 /**
 */
 export function start() {
@@ -66,8 +68,6 @@ export function run(inverse_spawn_rate) {
 export function print_agent_at(x, y) {
     wasm.print_agent_at(x, y);
 }
-
-function notDefined(what) { return () => { throw new Error(`${what} is not defined`); }; }
 
 function handleError(f, args) {
     try {
@@ -157,10 +157,6 @@ function getImports() {
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
-    imports.wbg.__wbg_msCrypto_6e7d3e1f92610cbb = function(arg0) {
-        const ret = getObject(arg0).msCrypto;
-        return addHeapObject(ret);
-    };
     imports.wbg.__wbg_require_78a3dcfbdba9cbce = function() { return handleError(function () {
         const ret = module.require;
         return addHeapObject(ret);
@@ -171,6 +167,10 @@ function getImports() {
     };
     imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
         const ret = getStringFromWasm0(arg0, arg1);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_msCrypto_6e7d3e1f92610cbb = function(arg0) {
+        const ret = getObject(arg0).msCrypto;
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_randomFillSync_6894564c2c334c42 = function() { return handleError(function (arg0, arg1, arg2) {

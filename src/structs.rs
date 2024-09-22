@@ -167,12 +167,8 @@ impl Agent {
 	}
 
 	fn mutate(mut self) -> Self {
-		let mut recv_neurons = self.brain.neurons_hidden.len() + OUTS;
-
-		// Slightly mutate colours
-		self.body.colour.r.add_bounded_max(rand_range(-16..16), 256);
-		self.body.colour.g.add_bounded_max(rand_range(-16..16), 256);
-		self.body.colour.b.add_bounded_max(rand_range(-16..16), 256);
+		self.brain.mutate();
+		self.body.mutate();
 
 		// Mutate inverse split frequency
 		if rand_range(0..self.inv_split_freq) == 0 {
@@ -183,47 +179,6 @@ impl Agent {
 			}
 		} else {
 			self.inv_split_freq.add_bounded(rand_range(-1..=1))
-		}
-
-		let mut new_neurons = 0;
-		let mut new_conns   = 0;
-
-		// Mutate input neurons
-		for neuron in &mut self.brain.neurons_in {
-			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
-		}
-
-		// Mutate hidden neurons
-		for neuron in &mut self.brain.neurons_hidden {
-			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
-		}
-
-		// Mutate output neurons
-		for neuron in &mut self.brain.neurons_out {
-			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
-		}
-
-		// Add new hidden neurons
-		for _ in 0..new_neurons {
-			self.brain.neurons_hidden.push(Neuron::new(recv_neurons));
-			recv_neurons += 1
-		}
-
-		// Add new outgoing connections
-		for _ in 0..new_conns {
-			let inps = self.brain.neurons_in.len();
-			let hids = self.brain.neurons_hidden.len();
-			let rand = rand_range(0..inps+hids+OUTS);
-
-			let neuron = if rand < inps {
-				&mut self.brain.neurons_in[rand]
-			} else if rand < inps+hids {
-				&mut self.brain.neurons_hidden[rand-inps]
-			} else {
-				&mut self.brain.neurons_out[rand-inps-hids]
-			};
-
-			neuron.next_conn.push(OutwardConn::new(recv_neurons))
 		}
 
 		self
@@ -313,6 +268,50 @@ impl Brain {
 				true => self.neurons_in[i].next_conn     = activations,
 				_    => self.neurons_hidden[i].next_conn = activations
 			}
+		}
+	}
+
+	fn mutate(&mut self) {
+		let mut recv_neurons = self.neurons_hidden.len() + OUTS;
+		let mut new_neurons  = 0;
+		let mut new_conns    = 0;
+
+		// Mutate input neurons
+		for neuron in &mut self.neurons_in {
+			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
+		}
+
+		// Mutate hidden neurons
+		for neuron in &mut self.neurons_hidden {
+			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
+		}
+
+		// Mutate output neurons
+		for neuron in &mut self.neurons_out {
+			neuron.mutate(&mut new_neurons, &mut new_conns, recv_neurons)
+		}
+
+		// Add new hidden neurons
+		for _ in 0..new_neurons {
+			self.neurons_hidden.push(Neuron::new(recv_neurons));
+			recv_neurons += 1
+		}
+
+		// Add new outgoing connections
+		for _ in 0..new_conns {
+			let inps = self.neurons_in.len();
+			let hids = self.neurons_hidden.len();
+			let rand = rand_range(0..inps+hids+OUTS);
+
+			let neuron = if rand < inps {
+				&mut self.neurons_in[rand]
+			} else if rand < inps+hids {
+				&mut self.neurons_hidden[rand-inps]
+			} else {
+				&mut self.neurons_out[rand-inps-hids]
+			};
+
+			neuron.next_conn.push(OutwardConn::new(recv_neurons))
 		}
 	}
 }
@@ -500,6 +499,13 @@ impl fmt::Debug for Neuron {
 
 
 impl Body {
+	fn mutate(&mut self) {
+		// Slightly mutate colours
+		self.colour.r.add_bounded_max(rand_range(-16..16), 256);
+		self.colour.g.add_bounded_max(rand_range(-16..16), 256);
+		self.colour.b.add_bounded_max(rand_range(-16..16), 256);
+	}
+
 	fn remove(&mut self, removal: f64) {
 		let new_size = (self.size*self.size - removal*removal).sqrt();
 
