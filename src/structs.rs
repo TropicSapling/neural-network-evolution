@@ -45,8 +45,7 @@ pub struct OutwardConn {
 	pub dest_index: usize,
 	pub speed: usize, // currently unused
 	pub weight: f64,
-
-	relu: bool
+	pub relu: bool
 }
 
 

@@ -47,7 +47,11 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		body.mov = 0.0;
 		if output[0].excitation >= output[0].act_threshold {
 			for conn in &output[0].next_conn {
-				body.mov += conn.weight;
+				if conn.relu {
+					body.mov += conn.weight * output[0].excitation
+				} else {
+					body.mov += conn.weight
+				}
 			}
 		}
 
@@ -55,7 +59,11 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 		body.rot = 0.0;
 		if output[1].excitation >= output[1].act_threshold {
 			for conn in &output[1].next_conn {
-				body.rot += conn.weight;
+				if conn.relu {
+					body.rot += conn.weight * output[1].excitation
+				} else {
+					body.rot += conn.weight
+				}
 			}
 		}
 	}
