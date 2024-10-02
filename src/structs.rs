@@ -37,7 +37,9 @@ pub struct Neuron {
 
 	pub next_conn: Vec<OutwardConn>,
 
-	reachable: bool
+	reachable: bool,
+
+	mut_rate: usize
 }
 
 #[derive(Clone, Debug)]
@@ -325,16 +327,16 @@ impl Neuron {
 
 			next_conn: vec![OutwardConn::new(recv_neuron_count)],
 
-			reachable: false
+			reachable: false,
+
+			mut_rate: 3
 		}
 	}
 
-	// TODO: maybe have mutation rate part of neuron properties?
-
-	// 33/67 if mutation or not
-	fn should_mutate_now() -> bool {rand_range(0..3) == 0}
-	// 67/33 if expansion or shrinking
-	fn should_expand_now() -> bool {rand_range(0..3) < 2}
+	// By default 33/67 if mutation or not
+	fn should_mutate_now(mut_rate: usize) -> bool {rand_range(0..mut_rate) == 0}
+	// By default 67/33 if expansion or shrinking
+	fn should_expand_now(mut_rate: usize) -> bool {rand_range(0..mut_rate) < 2}
 
 	fn mutate(&mut self,
 		new_neuron_count  : &mut usize,
@@ -342,19 +344,21 @@ impl Neuron {
 		recv_neuron_count :      usize
 	) {
 		// Mutate neuron properties
-		if Neuron::should_mutate_now() {
+		if Neuron::should_mutate_now(self.mut_rate) {
+			self.mut_rate.add_bounded([-1, 1][rand_range(0..=1)])}
+		if Neuron::should_mutate_now(self.mut_rate) {
 			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
-		if Neuron::should_mutate_now() {
+		if Neuron::should_mutate_now(self.mut_rate) {
 			self.act_threshold += [-1.0, 1.0][rand_range(0..=1)]}
 
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
-			if Neuron::should_mutate_now() {
+			if Neuron::should_mutate_now(self.mut_rate) {
 				if rand_range(0..(2 + conn.weight.abs() as usize)) == 0 {
 					// Sometimes flip weight
 					conn.weight = -conn.weight
 				} else {
-					if Neuron::should_expand_now() {
+					if Neuron::should_expand_now(self.mut_rate) {
 						// Sometimes expand weight or other stuff
 						match rand_range(0..3) {
 							0 => Neuron::expand_or_shrink(&mut conn.weight, 1.0),
