@@ -115,14 +115,14 @@ async function load(module, imports) {
 function getImports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_log_568f06cfee1eeaff = function(arg0, arg1) {
+    imports.wbg.__wbg_log_fe25ebc5abcc9283 = function(arg0, arg1) {
         console.log(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbg_drawbg_c32363338140a13a = typeof window.draw_bg == 'function' ? window.draw_bg : notDefined('window.draw_bg');
-    imports.wbg.__wbg_drawagent_cbb35e93fd9845e8 = function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    imports.wbg.__wbg_drawbg_a7c4619b532af7ea = typeof window.draw_bg == 'function' ? window.draw_bg : notDefined('window.draw_bg');
+    imports.wbg.__wbg_drawagent_7fcd0d47c39f2a92 = function(arg0, arg1, arg2, arg3, arg4, arg5) {
         window.draw_agent(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3, arg4, arg5);
     };
-    imports.wbg.__wbg_drawneuralnetwork_32898b899a30f2c9 = function(arg0, arg1) {
+    imports.wbg.__wbg_drawneuralnetwork_44951fcf28ee5e83 = function(arg0, arg1) {
         try {
             window.draw_neural_network(getStringFromWasm0(arg0, arg1));
         } finally {

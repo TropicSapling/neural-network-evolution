@@ -70,10 +70,16 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 }
 
 fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64, f64) {
-	// TODO: also get distance & angle to nearest border edge?
-
 	let mut nearest = (0, 0.0, 0.0); // (ID, inv_dist, angle)
 
+	let inv_dist_to_border = [
+		(GAME_SIZE - agents[i].body.pos.x.abs()).powf(4.0),
+		(GAME_SIZE - agents[i].body.pos.y.abs()).powf(4.0),
+		agents[i].body.pos.x.powf(4.0),
+		agents[i].body.pos.y.powf(4.0)
+	];
+
+	// Find the nearest agent
 	for j in 0..agents.len() {
 		if i == j || agents[j].body.size < 32.0 {continue}
 
@@ -83,7 +89,19 @@ fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64, f64) {
 		}
 	}
 
-	(agents[nearest.0].body.size, nearest.1, nearest.2)
+	// Override nearest with border if it is closer
+	for dist in inv_dist_to_border {
+		if dist > nearest.1 {
+			nearest = (usize::MAX, dist, nearest.2)
+		}
+	}
+
+	// Return max size if border, otherwise the size of the nearest agent
+	if nearest.0 == usize::MAX {
+		(GAME_SIZE, nearest.1, nearest.2)
+	} else {
+		(agents[nearest.0].body.size, nearest.1, nearest.2)
+	}
 }
 
 // Note: returns radians within [-PI, PI]
