@@ -39,7 +39,7 @@ pub struct Neuron {
 
 	reachable: bool,
 
-	mut_rate: usize
+	inv_mut: usize
 }
 
 #[derive(Clone, Debug)]
@@ -329,14 +329,14 @@ impl Neuron {
 
 			reachable: false,
 
-			mut_rate: 2
+			inv_mut: 2
 		}
 	}
 
 	// By default 33/67 if mutation or not
-	fn should_mutate_now(mut_rate: usize) -> bool {rand_range(0..=mut_rate) == 0}
+	fn should_mutate_now(inv_mut: usize) -> bool {rand_range(0..=inv_mut) == 0}
 	// By default 67/33 if expansion or shrinking
-	fn should_expand_now(mut_rate: usize) -> bool {rand_range(0..=mut_rate) < 2}
+	fn should_expand_now(inv_mut: usize) -> bool {rand_range(0..=inv_mut) < 2}
 
 	fn mutate(&mut self,
 		new_neuron_count  : &mut usize,
@@ -344,21 +344,21 @@ impl Neuron {
 		recv_neuron_count :      usize
 	) {
 		// Mutate neuron properties
-		if Neuron::should_mutate_now(self.mut_rate) {
-			self.mut_rate.add_bounded([-1, 1][rand_range(0..=1)])}
-		if Neuron::should_mutate_now(self.mut_rate) {
+		if Neuron::should_mutate_now(self.inv_mut) {
+			self.inv_mut.add_bounded([-1, 1][rand_range(0..=1)])}
+		if Neuron::should_mutate_now(self.inv_mut) {
 			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
-		if Neuron::should_mutate_now(self.mut_rate) {
+		if Neuron::should_mutate_now(self.inv_mut) {
 			self.act_threshold += [-1.0, 1.0][rand_range(0..=1)]}
 
 		// Mutate outgoing connections
 		for conn in &mut self.next_conn {
-			if Neuron::should_mutate_now(self.mut_rate) {
+			if Neuron::should_mutate_now(self.inv_mut) {
 				if rand_range(0..(2 + conn.weight.abs() as usize)) == 0 {
 					// Sometimes flip weight
 					conn.weight = -conn.weight
 				} else {
-					if Neuron::should_expand_now(self.mut_rate) {
+					if Neuron::should_expand_now(self.inv_mut) {
 						// Sometimes expand weight or other stuff
 						match rand_range(0..3) {
 							0 => Neuron::expand_or_shrink(&mut conn.weight, 1.0),
@@ -480,8 +480,8 @@ impl fmt::Debug for Neuron {
 			);
 
 			let mut s = format!(
-				"{s}Neuron {{IS@{:.1} | ACT@{:.1} | MUT@{} | ",
-				             is_at,     act_at,     self.mut_rate
+				"{s}Neuron {{IS@{:.1} | ACT@{:.1} | INVMUT@{} | ",
+				             is_at,     act_at,     self.inv_mut
 			);
 
 			let mut conn_iter = self.next_conn.iter().peekable();
