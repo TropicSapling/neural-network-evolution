@@ -323,9 +323,6 @@ impl Brain {
 
 			neuron.next_conn.push(OutwardConn::new(recv_neurons))
 		}
-
-		// Remove effectively dead neurons
-		self.neurons_hid.retain(|neuron| neuron.next_conn.len() > 0)
 	}
 }
 
@@ -390,7 +387,7 @@ impl Neuron {
 		// Remove effectively dead connections
 		self.next_conn.retain(|conn| (conn.weight*10.0).round() != 0.0);
 
-		// If this neuron is inactive, try recycling it (otherwise removed later)
+		// If this neuron is inactive, try recycling it
 		if self.next_conn.len() < 1 && *new_neuron_count > 0 {
 			*new_neuron_count -= 1;
 			self.next_conn.push(OutwardConn::new(recv_neuron_count))
@@ -486,7 +483,7 @@ impl fmt::Debug for Neuron {
 				if is_at >= act_at {
 					let mut total_res = 0.0;
 					for conn in &self.next_conn {
-						total_res += conn.weight;  
+						total_res += conn.weight
 					}
 
 					if total_res < 0.0 {"🔴 "} else {"🟢 "}
