@@ -157,12 +157,11 @@ impl Agent {
 
 		let mut brain = self.brain.clone();
 
-		brain.generation += 1;
-
 		// Spawn identical copy of self in 1/2 of cases, otherwise mutate
 		return if rand_range(0..2) == 0 {
 			Agent::with(brain, colour, child_size, freq)
 		} else {
+			brain.generation += 1;
 			Agent::with(brain, colour, child_size, freq).mutate()
 		}
 	}
