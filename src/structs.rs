@@ -345,6 +345,8 @@ impl Neuron {
 	) {
 		// Mutate neuron properties
 		if Neuron::should_mutate_now(self.mut_rate) {
+			use crate::log;
+			console_log!("{}", self.mut_rate);
 			self.mut_rate.add_bounded([-1, 1][rand_range(0..=1)])}
 		if Neuron::should_mutate_now(self.mut_rate) {
 			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
