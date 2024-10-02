@@ -479,7 +479,10 @@ impl fmt::Debug for Neuron {
 				} else {"✖️ "}
 			);
 
-			let mut s = format!("{s}Neuron {{IS@{:.1} | ACT@{:.1} | ", is_at, act_at);
+			let mut s = format!(
+				"{s}Neuron {{IS@{:.1} | ACT@{:.1} | MUT@{} | ",
+				             is_at,     act_at,     self.mut_rate
+			);
 
 			let mut conn_iter = self.next_conn.iter().peekable();
 			while let Some(conn) = conn_iter.next() {
