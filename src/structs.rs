@@ -99,7 +99,7 @@ impl Agent {
 			                      Neuron::new(8), Neuron::new(8), Neuron::new(8)],
 			neurons_out    :     [Neuron::new(8),                 Neuron::new(8)],
 			generation: 0
-		}, Colour::new(), 48.0, 256);
+		}, Colour::new(), 48.0, 255);
 
 		for _ in 0..rand_range(0..8) {
 			new_agent = new_agent.mutate()
@@ -172,7 +172,7 @@ impl Agent {
 		self.body.mutate();
 
 		// Mutate inverse split frequency
-		if rand_range(0..self.inv_split_freq) == 0 {
+		if rand_range(0..=self.inv_split_freq) == 0 {
 			if rand_range(0..=1) == 0 || self.inv_split_freq <= 1 {
 				self.inv_split_freq *= 2
 			} else {
@@ -329,14 +329,14 @@ impl Neuron {
 
 			reachable: false,
 
-			mut_rate: 3
+			mut_rate: 2
 		}
 	}
 
 	// By default 33/67 if mutation or not
-	fn should_mutate_now(mut_rate: usize) -> bool {rand_range(0..mut_rate) == 0}
+	fn should_mutate_now(mut_rate: usize) -> bool {rand_range(0..=mut_rate) == 0}
 	// By default 67/33 if expansion or shrinking
-	fn should_expand_now(mut_rate: usize) -> bool {rand_range(0..mut_rate) < 2}
+	fn should_expand_now(mut_rate: usize) -> bool {rand_range(0..=mut_rate) < 2}
 
 	fn mutate(&mut self,
 		new_neuron_count  : &mut usize,
@@ -345,8 +345,6 @@ impl Neuron {
 	) {
 		// Mutate neuron properties
 		if Neuron::should_mutate_now(self.mut_rate) {
-			use crate::log;
-			console_log!("{}", self.mut_rate);
 			self.mut_rate.add_bounded([-1, 1][rand_range(0..=1)])}
 		if Neuron::should_mutate_now(self.mut_rate) {
 			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
