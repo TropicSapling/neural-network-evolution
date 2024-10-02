@@ -333,6 +333,8 @@ impl Neuron {
 		}
 	}
 
+	// By default 20/80 if change mutation rate or not
+	fn should_mutate_mut(inv_mut: usize) -> bool {rand_range(0..=inv_mut.pow(2)) == 0}
 	// By default 33/67 if mutation or not
 	fn should_mutate_now(inv_mut: usize) -> bool {rand_range(0..=inv_mut) == 0}
 	// By default 67/33 if expansion or shrinking
@@ -344,7 +346,7 @@ impl Neuron {
 		recv_neuron_count :      usize
 	) {
 		// Mutate neuron properties
-		if Neuron::should_mutate_now(self.inv_mut) {
+		if Neuron::should_mutate_mut(self.inv_mut) {
 			self.inv_mut.add_bounded([-1, 1][rand_range(0..=1)])}
 		if Neuron::should_mutate_now(self.inv_mut) {
 			self.tick_drain += [-1.0, 1.0][rand_range(0..=1)]}
