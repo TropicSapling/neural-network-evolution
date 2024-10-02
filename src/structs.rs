@@ -336,8 +336,8 @@ impl Neuron {
 	fn should_mutate_mut(inv_mut: usize) -> bool {rand_range(0..=inv_mut.pow(3)) == 0}
 	// By default 33/67 if mutation or not
 	fn should_mutate_now(inv_mut: usize) -> bool {rand_range(0..=inv_mut) == 0}
-	// By default 67/33 if expansion or shrinking
-	fn should_expand_now(inv_mut: usize) -> bool {rand_range(0..=inv_mut) < 2}
+	// Always 50/50 if expansion or shrinking
+	fn should_expand_now() -> bool {rand_range(0..=1) == 0}
 
 	fn mutate(&mut self,
 		new_neuron_count  : &mut usize,
@@ -359,7 +359,7 @@ impl Neuron {
 					// Sometimes flip weight
 					conn.weight = -conn.weight
 				} else {
-					if Neuron::should_expand_now(self.inv_mut) {
+					if Neuron::should_expand_now() {
 						// Sometimes expand weight or other stuff
 						match rand_range(0..3) {
 							0 => Neuron::expand_or_shrink(&mut conn.weight, 1.0),
