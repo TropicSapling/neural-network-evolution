@@ -71,37 +71,43 @@ pub fn update_ai(agents: &mut Vec<Agent>) {
 
 fn get_nearest(agents: &Vec<Agent>, i: usize) -> (f64, f64, f64) {
 	let mut nearest = (0, 0.0, 0.0); // (ID, inv_dist, angle)
+	let (pos,angle) = (agents[i].body.pos, agents[i].body.angle);
 
-	let inv_dist_to_border = [
-		(GAME_SIZE - agents[i].body.pos.x.abs()).powf(4.0),
-		(GAME_SIZE - agents[i].body.pos.y.abs()).powf(4.0),
-		agents[i].body.pos.x.powf(4.0),
-		agents[i].body.pos.y.powf(4.0)
+	// Calculate inverse distances and angles to borders
+	let border_invdists_angles = [
+		((GAME_SIZE - pos.x.abs()).powf(4.0), norm_angle(PI     - angle)),
+		((GAME_SIZE - pos.y.abs()).powf(4.0), norm_angle(PI/2.0 - angle)),
+		(pos.x.powf(4.0), norm_angle(-angle)),
+		(pos.y.powf(4.0), norm_angle(-PI/2.0 - angle))
 	];
 
 	// Find the nearest agent
 	for j in 0..agents.len() {
 		if i == j || agents[j].body.size < 32.0 {continue}
 
-		let inv_dist_to_j = inv_dist(agents[i].body.pos, agents[j].body.pos);
+		let inv_dist_to_j = inv_dist(pos, agents[j].body.pos);
 		if inv_dist_to_j > nearest.1 {
 			nearest = (j, inv_dist_to_j, angle_between(&agents, i, j))
 		}
 	}
 
 	// Override nearest with border if it is closer
-	for dist in inv_dist_to_border {
+	for (dist, angle) in border_invdists_angles {
 		if dist > nearest.1 {
-			nearest = (usize::MAX, dist, nearest.2)
+			nearest = (usize::MAX, dist, angle)
 		}
 	}
 
-	// Return max size if border, otherwise the size of the nearest agent
+	// Return with max size if border, otherwise with size of nearest agent
 	if nearest.0 == usize::MAX {
 		(GAME_SIZE, nearest.1, nearest.2)
 	} else {
 		(agents[nearest.0].body.size, nearest.1, nearest.2)
 	}
+}
+
+fn norm_angle(angle: f64) -> f64 {
+	angle.sin().atan2(angle.cos()) // trick to get angle between within [-PI, PI]
 }
 
 // Note: returns radians within [-PI, PI]
@@ -110,7 +116,7 @@ fn angle_between(agents: &Vec<Agent>, i: usize, j: usize) -> f64 {
 	let pos2 = agents[j].body.pos;
 	let diff = agents[i].body.angle - (pos2.y - pos.y).atan2(pos2.x - pos.x);
 
-	diff.sin().atan2(diff.cos()) // trick to get angle between within [-PI, PI]
+	norm_angle(diff)
 }
 
 fn inv_dist(pos1: Pos, pos2: Pos) -> f64 {
