@@ -87,7 +87,7 @@ impl Agent {
 		// Prioritise spawning from existing generations
 		for parent in agents {
 			if parent.brain.generation > 4    &&
-			   parent.body.size        > 32.0 && rand_range(0..32) == 0 {
+			   parent.body.size        > 32.0 && rand_range(0..16) == 0 {
 				return parent.spawn_child(rand_range(48.0..64.0))
 			}
 		}
@@ -101,7 +101,7 @@ impl Agent {
 			generation: 0
 		}, Colour::new(), 48.0, 255);
 
-		for _ in 0..rand_range(0..8) {
+		for _ in 0..rand_range(0..16) {
 			new_agent = new_agent.mutate()
 		}
 
