@@ -24,7 +24,7 @@ static AGENTS: Mutex<Vec<Agent>> = Mutex::new(vec![]);
 
 #[wasm_bindgen(start)]
 pub fn start() {
-	console_log!("Starting version 0.3.5")
+	console_log!("Starting version 0.3.6")
 }
 
 #[wasm_bindgen]

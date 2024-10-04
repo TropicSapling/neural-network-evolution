@@ -90,7 +90,7 @@ impl Agent {
 			                  Neuron::new(8), Neuron::new(8), Neuron::new(8)],
 			neurons_out:     [Neuron::new(8),                 Neuron::new(8)],
 			generation: 0
-		}, Colour::new(), 48.0, 255);
+		}, Colour::new(), 40.0, 255);
 
 		for _ in 0..rand_range(0..16) {
 			new_agent = new_agent.mutate()
@@ -102,8 +102,8 @@ impl Agent {
 	pub fn maybe_split(agents: &mut Vec<Agent>) -> Option<Agent> {
 		// TODO: consider instead spawning children of all-time high scorers
 		for parent in agents {
-			if parent.body.size > 128.0 {
-				let div        = 1.0 + (parent.body.size - 128.0)/16.0;
+			if parent.body.size > 96.0 {
+				let div        = 1.0 + (parent.body.size - 96.0)/16.0;
 				let inv_chance = parent.inv_split_freq / (div as usize);
 
 				// TODO: decide when to split based on a third neuron output instead?
