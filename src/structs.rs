@@ -83,16 +83,7 @@ pub struct Pos {pub x: f64, pub y: f64}
 
 
 impl Agent {
-	pub fn new(agents: &Vec<Agent>) -> Agent {
-		// Prioritise spawning from existing generations
-		for parent in agents {
-			if parent.brain.generation > 4    &&
-			   parent.body.size        > 80.0 && rand_range(0..16) == 0 {
-				return parent.spawn_child(rand_range(48.0..64.0))
-			}
-		}
-
-		// But sometimes spawn an entirely new agent
+	pub fn new() -> Agent {
 		let mut new_agent = Agent::with(Brain {
 			neurons_inp:     [Neuron::new(8), Neuron::new(8), Neuron::new(8)],
 			neurons_hid: vec![Neuron::new(8), Neuron::new(8), Neuron::new(8),

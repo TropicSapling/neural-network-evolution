@@ -24,7 +24,7 @@ static AGENTS: Mutex<Vec<Agent>> = Mutex::new(vec![]);
 
 #[wasm_bindgen(start)]
 pub fn start() {
-	console_log!("Starting version 0.3.3")
+	console_log!("Starting version 0.3.4")
 }
 
 #[wasm_bindgen]
@@ -33,8 +33,7 @@ pub fn run(inverse_spawn_rate: usize) {
 
 	// Randomly spawn new agents
 	if rand_range(0..inverse_spawn_rate) == 0 {
-		let agent = Agent::new(&agents);
-		agents.push(agent)
+		agents.push(Agent::new())
 	}
 
 	if let Some(agent) = Agent::maybe_split(&mut agents) {
