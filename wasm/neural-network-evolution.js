@@ -111,14 +111,14 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_log_3b860c79fbba164c = function(arg0, arg1) {
+    imports.wbg.__wbg_log_0d3607ac34315825 = function(arg0, arg1) {
         console.log(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbg_drawbg_b06833afaa061402 = typeof window.draw_bg == 'function' ? window.draw_bg : notDefined('window.draw_bg');
-    imports.wbg.__wbg_drawagent_e1b6bb5a44515cc3 = function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    imports.wbg.__wbg_drawbg_174926600cb57dbc = typeof window.draw_bg == 'function' ? window.draw_bg : notDefined('window.draw_bg');
+    imports.wbg.__wbg_drawagent_3380f877eea25717 = function(arg0, arg1, arg2, arg3, arg4, arg5) {
         window.draw_agent(arg0 >>> 0, arg1 >>> 0, arg2 >>> 0, arg3, arg4, arg5);
     };
-    imports.wbg.__wbg_drawneuralnetwork_eeb72c39510fee33 = function(arg0, arg1) {
+    imports.wbg.__wbg_drawneuralnetwork_60a64832da52ee20 = function(arg0, arg1) {
         let deferred0_0;
         let deferred0_1;
         try {

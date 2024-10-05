@@ -5,7 +5,7 @@ const MAX_DIST: f64 = 259_200_000_000.0;
 
 ////////////////////////////////
 
-pub fn assign(input: &mut [Neuron; 3], body: &Body, nearest: Nearest) {
+pub fn assign(input: &mut [Neuron; 4], body: &Body, nearest: Nearest) {
 	// Relative size of nearest as first input
 	input[0].excitation = if body.size > nearest.size*1.1 {
 		1.0
@@ -17,7 +17,17 @@ pub fn assign(input: &mut [Neuron; 3], body: &Body, nearest: Nearest) {
 	input[1].excitation = nearest.inv_dist / MAX_DIST;
 
 	// Angle towards nearest as third input
-	input[2].excitation = nearest.angle / PI
+	input[2].excitation = nearest.angle / PI;
+
+	// Touching edge or not as fourth input
+	input[3].excitation = touching_edge(body).into()
+}
+
+fn touching_edge(body: &Body) -> bool {
+	body.pos.x == 0.0                   ||
+	body.pos.y == 0.0                   ||
+	body.pos.x == GAME_SIZE - body.size ||
+	body.pos.y == GAME_SIZE - body.size
 }
 
 ////////////////////////////////
@@ -50,30 +60,7 @@ impl Nearest {
 			}
 		}
 
-		// Override nearest with border if it is closer
-		let border_invdists_angles = Nearest::borders_to(&agents[i].body);
-		for (inv_dist, angle) in border_invdists_angles {
-			if inv_dist > nearest.inv_dist {
-				nearest = Nearest {size: GAME_SIZE, inv_dist, angle}
-			}
-		}
-
 		nearest
-	}
-
-	// Returns inverse distances and angles to borders
-	fn borders_to(body: &Body) -> [(f64, f64); 4] {
-		let (pos, angle) = (body.pos, body.angle);
-
-		[
-			// Left and top borders
-			((GAME_SIZE - pos.x.abs()).powf(4.0), Self::norm_angle(PI     - angle)),
-			((GAME_SIZE - pos.y.abs()).powf(4.0), Self::norm_angle(PI/2.0 - angle)),
-
-			// Right and bottom borders
-			(pos.x.powf(4.0), Self::norm_angle(        - angle)),
-			(pos.y.powf(4.0), Self::norm_angle(-PI/2.0 - angle))
-		]
 	}
 
 	fn norm_angle(angle: f64) -> f64 {

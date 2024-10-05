@@ -2,7 +2,12 @@ use std::{fmt, f64::consts::PI};
 
 use crate::helpers::*;
 
+const INPS: usize = 4;
 const OUTS: usize = 2;
+
+macro_rules! arr {
+	($elem:expr) => (core::array::from_fn(|_| $elem))
+}
 
 #[derive(Debug)]
 pub struct Agent {
@@ -17,13 +22,13 @@ pub struct Agent {
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 
-/// neurons_inp: [size_diff, dist, angle_to_near] normalised to [-1, 1]
+/// neurons_inp: [size_diff, dist, angle_to_near, touching_edge] normalised to [-1, 1]
 /// neurons_out: [mov, rot] normalised to [-1, 1]
 #[derive(Clone)]
 pub struct Brain {
-	neurons_inp: [Neuron; 3],
+	neurons_inp: [Neuron; INPS],
 	neurons_hid: Vec<Neuron>,
-	neurons_out: [Neuron; 2],
+	neurons_out: [Neuron; OUTS],
 
 	generation: usize // for debugging/display
 }
@@ -85,10 +90,9 @@ pub struct Pos {pub x: f64, pub y: f64}
 impl Agent {
 	pub fn new() -> Agent {
 		let mut new_agent = Agent::with(Brain {
-			neurons_inp:     [Neuron::new(8), Neuron::new(8), Neuron::new(8)],
-			neurons_hid: vec![Neuron::new(8), Neuron::new(8), Neuron::new(8),
-			                  Neuron::new(8), Neuron::new(8), Neuron::new(8)],
-			neurons_out:     [Neuron::new(8),                 Neuron::new(8)],
+			neurons_inp: arr![Neuron::new(6+OUTS)   ],
+			neurons_hid: vec![Neuron::new(6+OUTS); 6],
+			neurons_out: arr![Neuron::new(6+OUTS)   ],
 			generation: 0
 		}, Colour::new(), 40.0, 255);
 
@@ -182,9 +186,9 @@ impl Agent {
 
 
 impl Brain {
-	pub fn input(&mut self) -> &mut [Neuron; 3] {&mut self.neurons_inp}
+	pub fn input(&mut self) -> &mut [Neuron; INPS] {&mut self.neurons_inp}
 
-	pub fn update_neurons(&mut self) -> &[Neuron; 2] {
+	pub fn update_neurons(&mut self) -> &[Neuron; OUTS] {
 		// Drain output neurons from previous excitation
 		for i in 0..OUTS {
 			self.neurons_out[i].drain()
@@ -300,16 +304,15 @@ impl Brain {
 
 		// Add new outgoing connections
 		for _ in 0..new_conns {
-			let inps = self.neurons_inp.len();
 			let hids = self.neurons_hid.len();
-			let rand = rand_range(0..inps+hids+OUTS);
+			let rand = rand_range(0..INPS+hids+OUTS);
 
-			let neuron = if rand < inps {
+			let neuron = if rand < INPS {
 				&mut self.neurons_inp[rand]
-			} else if rand < inps+hids {
-				&mut self.neurons_hid[rand-inps]
+			} else if rand < INPS+hids {
+				&mut self.neurons_hid[rand-INPS]
 			} else {
-				&mut self.neurons_out[rand-inps-hids]
+				&mut self.neurons_out[rand-INPS-hids]
 			};
 
 			neuron.next_conn.push(OutwardConn::new(recv_neurons))
