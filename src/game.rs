@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use crate::structs::*;
+use crate::agent::*;
 
 pub const GAME_SIZE: f64 = 600.0;
 

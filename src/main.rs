@@ -4,16 +4,19 @@
 
 #[macro_use]
 mod js;
-mod structs;
 mod helpers;
 mod game;
+
 mod ai;
+mod agent;
+mod input;
+mod output;
 
 use std::sync::Mutex;
 
 use wasm_bindgen::prelude::*;
 
-use {helpers::*, js::*, structs::*};
+use {agent::*, helpers::*, js::*};
 use game::update_game;
 use ai::update_ai;
 
@@ -24,7 +27,7 @@ static AGENTS: Mutex<Vec<Agent>> = Mutex::new(vec![]);
 
 #[wasm_bindgen(start)]
 pub fn start() {
-	console_log!("Starting version 0.3.6")
+	console_log!("Starting version 0.4.0")
 }
 
 #[wasm_bindgen]
