@@ -114,7 +114,7 @@ impl Agent {
 				if rand_range(0..=inv_chance) == 0 {
 					// Spawn child agent
 
-					let child_size = 0.7*parent.body.size;
+					let child_size = 0.42*parent.body.size;
 
 					parent.body.remove(child_size); // shrink parent
 
